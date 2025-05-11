@@ -10,5 +10,5 @@ public class User {
     private String surname;
     private String email;
     private String address;
-    int userTypeId;
+    UserType userType;
 }
