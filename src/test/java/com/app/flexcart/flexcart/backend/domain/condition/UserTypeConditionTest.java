@@ -16,7 +16,6 @@ public class UserTypeConditionTest {
 
     @Test
     public void testIsSatisfiedBy_UserTypeMatches() {
-        // Arrange
         UserType expectedUserType = UserType.PREMIUM;
         UserTypeCondition condition = new UserTypeCondition(expectedUserType);
 
@@ -26,16 +25,13 @@ public class UserTypeConditionTest {
         Order mockOrder = mock(Order.class);
         when(mockOrder.getUser()).thenReturn(mockUser);
 
-        // Act
         boolean result = condition.isSatisfiedBy(mockOrder);
 
-        // Assert
         assertTrue(result, "Condition should be satisfied when user type matches.");
     }
 
     @Test
     public void testIsSatisfiedBy_UserTypeDoesNotMatch() {
-        // Arrange
         UserType expectedUserType = UserType.PREMIUM;
         UserTypeCondition condition = new UserTypeCondition(expectedUserType);
 
@@ -45,10 +41,8 @@ public class UserTypeConditionTest {
         Order mockOrder = mock(Order.class);
         when(mockOrder.getUser()).thenReturn(mockUser);
 
-        // Act
         boolean result = condition.isSatisfiedBy(mockOrder);
 
-        // Assert
         assertFalse(result, "Condition should not be satisfied when user type does not match.");
     }
 }
