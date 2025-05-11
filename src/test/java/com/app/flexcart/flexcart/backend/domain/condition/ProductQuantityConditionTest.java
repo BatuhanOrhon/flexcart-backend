@@ -20,7 +20,7 @@ public class ProductQuantityConditionTest {
     @Test
     public void testIsSatisfiedBy_ConditionMet() {
         long productId = 1L;
-        ProductQuantityCondition condition = new ProductQuantityCondition(productId);
+        ProductQuantityCondition condition = new ProductQuantityCondition(productId, 3);
 
         Product mockProduct = mock(Product.class);
         when(mockProduct.getProductId()).thenReturn(productId);
@@ -47,7 +47,7 @@ public class ProductQuantityConditionTest {
     @Test
     public void testIsSatisfiedBy_ConditionNotMet() {
         long productId = 1L;
-        ProductQuantityCondition condition = new ProductQuantityCondition(productId);
+        ProductQuantityCondition condition = new ProductQuantityCondition(productId, 3);
 
         Product mockProduct = mock(Product.class);
         when(mockProduct.getProductId()).thenReturn(productId);
@@ -70,7 +70,7 @@ public class ProductQuantityConditionTest {
     @Test
     public void testIsSatisfiedBy_NoMatchingProduct() {
         long productId = 1L;
-        ProductQuantityCondition condition = new ProductQuantityCondition(productId);
+        ProductQuantityCondition condition = new ProductQuantityCondition(productId, 3);
 
         Product mockProduct = mock(Product.class);
         when(mockProduct.getProductId()).thenReturn(2L);

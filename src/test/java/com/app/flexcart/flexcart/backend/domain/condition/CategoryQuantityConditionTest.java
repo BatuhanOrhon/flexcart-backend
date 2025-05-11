@@ -19,7 +19,7 @@ public class CategoryQuantityConditionTest {
     @Test
     public void testIsSatisfiedBy_ConditionMet() {
         int categoryId = 1;
-        CategoryQuantityCondition condition = new CategoryQuantityCondition(categoryId);
+        CategoryQuantityCondition condition = new CategoryQuantityCondition(categoryId, 3);
 
         Product mockProduct = mock(Product.class);
         when(mockProduct.getCategoryId()).thenReturn(categoryId);
@@ -46,7 +46,7 @@ public class CategoryQuantityConditionTest {
     @Test
     public void testIsSatisfiedBy_ConditionNotMet() {
         int categoryId = 1;
-        CategoryQuantityCondition condition = new CategoryQuantityCondition(categoryId);
+        CategoryQuantityCondition condition = new CategoryQuantityCondition(categoryId,3);
 
         Product mockProduct = mock(Product.class);
         when(mockProduct.getCategoryId()).thenReturn(categoryId);
@@ -69,7 +69,7 @@ public class CategoryQuantityConditionTest {
     @Test
     public void testIsSatisfiedBy_NoMatchingCategory() {
         int categoryId = 1;
-        CategoryQuantityCondition condition = new CategoryQuantityCondition(categoryId);
+        CategoryQuantityCondition condition = new CategoryQuantityCondition(categoryId, 3);
 
         Product mockProduct = mock(Product.class);
         when(mockProduct.getCategoryId()).thenReturn(2); // Different category ID

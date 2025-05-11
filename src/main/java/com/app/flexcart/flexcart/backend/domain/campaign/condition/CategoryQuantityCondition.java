@@ -6,7 +6,10 @@ import com.app.flexcart.flexcart.backend.domain.transaction.Order;
 public class CategoryQuantityCondition implements Condition {
     private final int categoryId;
 
-    public CategoryQuantityCondition(int categoryId) {
+    private final int minQuantity;
+
+    public CategoryQuantityCondition(int categoryId, int minQuantity) {
+        this.minQuantity = minQuantity;
         this.categoryId = categoryId;
     }
 
@@ -17,6 +20,6 @@ public class CategoryQuantityCondition implements Condition {
                 .filter(i -> i.getProduct().getCategoryId() == categoryId)
                 .mapToInt(CartItem::getQuantity)
                 .sum();
-        return sum > 3;
+        return sum > minQuantity;
     }
 }
