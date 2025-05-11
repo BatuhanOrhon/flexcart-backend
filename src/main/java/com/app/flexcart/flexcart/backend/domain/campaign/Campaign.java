@@ -1,17 +1,30 @@
 package com.app.flexcart.flexcart.backend.domain.campaign;
 
 import java.math.BigDecimal;
+import java.util.List;
 
-import com.app.flexcart.flexcart.backend.domain.transaction.Cart;
+import com.app.flexcart.flexcart.backend.domain.campaign.action.Action;
+import com.app.flexcart.flexcart.backend.domain.campaign.condition.Condition;
+import com.app.flexcart.flexcart.backend.domain.transaction.Order;
 
-public interface Campaign {
-    String getName();
+import lombok.Getter;
+import lombok.Setter;
 
-    String getDescription();
+@Getter
+@Setter
+public class Campaign {
+    private String name;
+    private String description;
+    private List<Condition> conditions;
+    private List<Action> actions;
 
-    String getStartDate();
+    public BigDecimal calculateDiscount(Order order) {
+        return actions.stream()
+                .map(a -> a.apply(order))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
 
-    String getEndDate();
-
-    BigDecimal apply(Cart cart);
+    public boolean isApplicable(Order order) {
+        return conditions.stream().allMatch(cond -> cond.isSatisfiedBy(order));
+    }
 }
