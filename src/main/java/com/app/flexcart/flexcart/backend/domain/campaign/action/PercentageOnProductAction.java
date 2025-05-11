@@ -3,23 +3,23 @@ package com.app.flexcart.flexcart.backend.domain.campaign.action;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-import com.app.flexcart.flexcart.backend.domain.transaction.Cart;
 import com.app.flexcart.flexcart.backend.domain.transaction.CartItem;
 import com.app.flexcart.flexcart.backend.domain.transaction.Order;
 
-public class PercentageOnCategoryAction implements Action {
-    private final int categoryId;
+public class PercentageOnProductAction implements Action {
+    private final Long productId;
     private final BigDecimal percent;
 
-    public PercentageOnCategoryAction(int categoryId, BigDecimal pct) {
-        this.categoryId = categoryId;
-        this.percent = pct;
+    public PercentageOnProductAction(Long productId, BigDecimal percent) {
+        this.percent = percent;
+        this.productId = productId;
     }
 
+    @Override
     public BigDecimal apply(Order order) {
-        Cart cart = order.getCart();
+        var cart = order.getCart();
         BigDecimal totalSub = cart.getCartItems().stream()
-                .filter(i -> i.getProduct().getCategoryId() == categoryId)
+                .filter(i -> i.getProduct().getProductId().equals(productId))
                 .map(CartItem::getSubTotalPrice)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
