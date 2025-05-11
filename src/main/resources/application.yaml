@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://ep-billowing-flower-a2s0qm46-pooler.eu-central-1.aws.neon.tech/flexchart?sslmode=require
+    username: neondb_owner
+    password: npg_evubVIEfw24m
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
