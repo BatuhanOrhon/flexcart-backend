@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 class ProductService {
     private final ProductRepository productRepository;
 
-    public ProductEntity getProductById(Long id) {
+    public ProductEntity getProductEntityById(Long id) {
         return productRepository.findById(id).orElseThrow();
     }
 }

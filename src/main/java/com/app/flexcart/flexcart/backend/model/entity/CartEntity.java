@@ -1,5 +1,6 @@
 package com.app.flexcart.flexcart.backend.model.entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -31,7 +32,8 @@ public class CartEntity {
     private UserEntity user;
     @Column(nullable = false)
     private LocalDateTime createdAt;
-
+    @Column(nullable = false)
+    private BigDecimal shippingFee;
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartItemEntity> cartItems;
 }

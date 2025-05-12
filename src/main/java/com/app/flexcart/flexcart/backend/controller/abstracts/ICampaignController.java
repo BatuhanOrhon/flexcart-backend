@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.app.flexcart.flexcart.backend.controller.schema.PostCampaignRequest;
 import com.app.flexcart.flexcart.backend.domain.campaign.Campaign;
 
+import jakarta.validation.Valid;
+
 @RequestMapping("/api")
 public interface ICampaignController {
 
@@ -19,10 +21,10 @@ public interface ICampaignController {
     ResponseEntity<String> getAllCampaigns();
 
     @PostMapping("/campaign")
-    ResponseEntity<String> createCampaign(@RequestBody PostCampaignRequest campaign);
+    ResponseEntity<String> createCampaign(@Valid @RequestBody PostCampaignRequest campaign);
 
     @PutMapping("/campaign/{id}")
-    ResponseEntity<Campaign> updateCampaign(@PathVariable Long id, @RequestBody Campaign campaign);
+    ResponseEntity<Campaign> updateCampaign(@PathVariable Long id, @Valid @RequestBody Campaign campaign);
 
     @DeleteMapping("/campaign/{id}")
     ResponseEntity<Void> deleteCampaign(@PathVariable Long id);
