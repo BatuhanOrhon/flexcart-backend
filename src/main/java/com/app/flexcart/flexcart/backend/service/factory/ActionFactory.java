@@ -26,7 +26,7 @@ public class ActionFactory {
                 return new FixedAmountAction(BigDecimal.valueOf((Double) amount));
 
             case FREE_UNITS_ON_CATEGORY:
-                var categoryId = params.get("category");
+                var categoryId = params.get("categoryId");
                 var freeUnits = params.get("freeUnits");
 
                 if (categoryId == null) {
@@ -39,7 +39,7 @@ public class ActionFactory {
                 return new FreeUnitsOnCategoryAction((Integer) categoryId, (Integer) freeUnits);
 
             case PERCENTAGE_ON_CATEGORY:
-                var categoryIdPct = params.get("category");
+                var categoryIdPct = params.get("categoryId");
                 var percent = params.get("percent");
 
                 if (categoryIdPct == null) {

@@ -27,7 +27,7 @@ public class ConditionFactory {
     public Condition createCondition(ConditionType conditionType, Map<String, Object> params) {
         switch (conditionType) {
             case CATEGORY_QUANTITY:
-                var category = params.get("category");
+                var category = params.get("categoryId");
                 var quantity = params.get("quantity");
 
                 assert category != null : "Category cannot be null for CATEGORY_QUANTITY condition";
