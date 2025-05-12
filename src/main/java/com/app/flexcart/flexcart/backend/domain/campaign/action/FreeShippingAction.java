@@ -4,6 +4,11 @@ import java.math.BigDecimal;
 
 import com.app.flexcart.flexcart.backend.domain.transaction.Cart;
 
-public interface Action {
-    BigDecimal apply(Cart cart);
+public class FreeShippingAction implements Action {
+
+    @Override
+    public BigDecimal apply(Cart cart) {
+        return cart.getShippingFee();
+    }
+
 }

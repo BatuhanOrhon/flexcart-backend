@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import com.app.flexcart.flexcart.backend.domain.campaign.action.Action;
 import com.app.flexcart.flexcart.backend.domain.campaign.action.ActionType;
 import com.app.flexcart.flexcart.backend.domain.campaign.action.FixedAmountAction;
+import com.app.flexcart.flexcart.backend.domain.campaign.action.FreeShippingAction;
 import com.app.flexcart.flexcart.backend.domain.campaign.action.FreeUnitsOnCategoryAction;
 import com.app.flexcart.flexcart.backend.domain.campaign.action.PercentageOnCategoryAction;
 import com.app.flexcart.flexcart.backend.domain.campaign.action.PercentageOnTotalAction;
@@ -71,7 +72,8 @@ public class ActionFactory {
                 }
 
                 return new PercentageOnTotalAction(BigDecimal.valueOf((Double) percentTotal));
-
+            case FREE_SHIPPING:
+                return new FreeShippingAction();
             default:
                 throw new IllegalArgumentException("Unknown action type: " + actionType);
         }
