@@ -18,7 +18,7 @@ import lombok.Setter;
 
 @Getter
 @AllArgsConstructor
-public class CreateCampaignRequest {
+public class PostCampaignRequest {
     @NotNull
     private String name;
     private String description;
