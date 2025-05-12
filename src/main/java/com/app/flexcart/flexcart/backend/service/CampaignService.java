@@ -6,8 +6,8 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
-import com.app.flexcart.flexcart.backend.controller.schema.CreateCampaignRequest.ActionRequest;
-import com.app.flexcart.flexcart.backend.controller.schema.CreateCampaignRequest.ConditionRequest;
+import com.app.flexcart.flexcart.backend.controller.schema.PostCampaignRequest.ActionRequest;
+import com.app.flexcart.flexcart.backend.controller.schema.PostCampaignRequest.ConditionRequest;
 import com.app.flexcart.flexcart.backend.domain.campaign.Campaign;
 import com.app.flexcart.flexcart.backend.domain.campaign.action.Action;
 import com.app.flexcart.flexcart.backend.domain.campaign.action.ActionType;
