@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.app.flexcart.flexcart.backend.controller.schema.CreateCampaignRequest;
+import com.app.flexcart.flexcart.backend.controller.schema.PostCampaignRequest;
 import com.app.flexcart.flexcart.backend.domain.campaign.Campaign;
 
 @RequestMapping("/api")
@@ -19,7 +19,7 @@ public interface ICampaignController {
     ResponseEntity<String> getAllCampaigns();
 
     @PostMapping("/campaign")
-    ResponseEntity<String> createCampaign(@RequestBody CreateCampaignRequest campaign);
+    ResponseEntity<String> createCampaign(@RequestBody PostCampaignRequest campaign);
 
     @PutMapping("/campaign/{id}")
     ResponseEntity<Campaign> updateCampaign(@PathVariable Long id, @RequestBody Campaign campaign);
