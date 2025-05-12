@@ -1,4 +1,4 @@
-package com.app.flexcart.flexcart.backend.domain.transaction;
+package com.app.flexcart.flexcart.backend.controller.schema.subclasses;
 
 import java.math.BigDecimal;
 
@@ -9,8 +9,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class Product {
+public class CartItemResponse {
     private Long productId;
+    private Integer quantity;
     private BigDecimal price;
-    private Integer categoryId;
+
 }

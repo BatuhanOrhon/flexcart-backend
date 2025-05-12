@@ -1,10 +1,15 @@
 package com.app.flexcart.flexcart.backend.service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.app.flexcart.flexcart.backend.domain.transaction.Cart;
+import com.app.flexcart.flexcart.backend.domain.transaction.CartItem;
+import com.app.flexcart.flexcart.backend.domain.transaction.Product;
 import com.app.flexcart.flexcart.backend.model.entity.CartEntity;
 import com.app.flexcart.flexcart.backend.model.entity.CartItemEntity;
 import com.app.flexcart.flexcart.backend.model.entity.ProductEntity;
@@ -23,10 +28,10 @@ public class CartService {
     private final CartRepository cartRepository;
 
     public void addCartItem(Long userId, Long productId, int quantity) {
-        var user = userService.getUserById(userId);
+        var user = userService.getUserEntityById(userId);
         var cart = user.getCart();
         cart = handleEmptyCart(cart, user);
-        var product = productService.getProductById(productId);
+        var product = productService.getProductEntityById(productId);
         insertProductIntoCart(cart, product, quantity);
         cartRepository.save(cart);
     }
@@ -45,13 +50,33 @@ public class CartService {
             cart.setCartItems(new ArrayList<CartItemEntity>());
             cart.setUser(user);
             cart.setCreatedAt(LocalDateTime.now());
+            cart.setShippingFee(BigDecimal.valueOf(25));
         }
         return cart;
     }
 
-    public CartEntity getCart(Long userId) {
-        var user = userService.getUserById(userId);
-        
-        return user.getCart();
+    public Cart getCart(Long userId) {
+        var cartEntity = cartRepository.findByUser_UserId(userId).orElseThrow();
+        var cart = generateCart(cartEntity);
+        return cart;
+    }
+
+    private CartItem convertCartItemEntityToDomain(CartItemEntity cartItemEntity) {
+        var productId = cartItemEntity.getProduct().getId();
+        var price = cartItemEntity.getProduct().getPrice();
+        var categoryId = cartItemEntity.getProduct().getCategory().getId().intValue();
+
+        var product = new Product(productId, price, categoryId);
+        return new CartItem(product, cartItemEntity.getQuantity());
+    }
+
+    private Cart generateCart(CartEntity cartEntity) {
+        var cartItems = cartEntity.getCartItems().stream().map(this::convertCartItemEntityToDomain)
+                .collect(Collectors.toList());
+        var cart = new Cart();
+        cart.setCartItems(cartItems);
+        cart.setShippingFee(cartEntity.getShippingFee());
+        cart.setUser(userService.getUserFromEntity(cartEntity.getUser()));
+        return cart;
     }
 }

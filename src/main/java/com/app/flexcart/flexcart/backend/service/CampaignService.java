@@ -1,8 +1,10 @@
 package com.app.flexcart.flexcart.backend.service;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
@@ -13,6 +15,7 @@ import com.app.flexcart.flexcart.backend.domain.campaign.action.Action;
 import com.app.flexcart.flexcart.backend.domain.campaign.action.ActionType;
 import com.app.flexcart.flexcart.backend.domain.campaign.condition.Condition;
 import com.app.flexcart.flexcart.backend.domain.campaign.condition.ConditionType;
+import com.app.flexcart.flexcart.backend.domain.transaction.Cart;
 import com.app.flexcart.flexcart.backend.model.entity.CampaignActionEntity;
 import com.app.flexcart.flexcart.backend.model.entity.CampaignConditionEntity;
 import com.app.flexcart.flexcart.backend.model.entity.CampaignEntity;
@@ -33,6 +36,12 @@ public class CampaignService {
     private final ActionFactory actionFactory;
     private final CampaignRepository campaignRepository;
     private ObjectMapper objectMapper = new ObjectMapper();
+
+    // TODO add free shipping logic
+    public Optional<Campaign> findBestCampaign(Cart cart) {
+        return getActiveCampaigns().stream().filter(c -> c.isApplicable(cart))
+                .max(Comparator.comparing(c -> c.calculateDiscount(cart)));
+    }
 
     public Campaign getCampaignObject(String name, String description, List<Action> actions,
             List<Condition> conditions) {
