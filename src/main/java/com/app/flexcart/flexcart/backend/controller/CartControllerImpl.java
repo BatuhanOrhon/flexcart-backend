@@ -42,7 +42,7 @@ public class CartControllerImpl implements ICartController {
         var campaignList = new ArrayList<Campaign>();
         campaignList.add(campaign);
         populateCampaignNames(response, campaignList);
-        return ResponseEntity.ok(new GetCartResponse());
+        return ResponseEntity.ok(response);
     }
 
     private void populateCampaignNames(GetCartResponse response, List<Campaign> campaign) {
