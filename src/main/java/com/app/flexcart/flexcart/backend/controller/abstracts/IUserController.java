@@ -9,6 +9,6 @@ import com.app.flexcart.flexcart.backend.controller.schema.CreateUserRequest;
 
 @RequestMapping("/api")
 public interface IUserController {
-    @PostMapping("/users")
+    @PostMapping("/user")
     ResponseEntity<String> createUser(@RequestBody CreateUserRequest user);
 }

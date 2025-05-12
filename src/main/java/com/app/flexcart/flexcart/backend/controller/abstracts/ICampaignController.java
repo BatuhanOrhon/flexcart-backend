@@ -15,15 +15,15 @@ import com.app.flexcart.flexcart.backend.domain.campaign.Campaign;
 @RequestMapping("/api")
 public interface ICampaignController {
 
-    @GetMapping("/campaigns")
+    @GetMapping("/campaign")
     ResponseEntity<String> getAllCampaigns();
 
-    @PostMapping("/campaigns")
+    @PostMapping("/campaign")
     ResponseEntity<String> createCampaign(@RequestBody CreateCampaignRequest campaign);
 
-    @PutMapping("/campaigns/{id}")
+    @PutMapping("/campaign/{id}")
     ResponseEntity<Campaign> updateCampaign(@PathVariable Long id, @RequestBody Campaign campaign);
 
-    @DeleteMapping("/campaigns/{id}")
+    @DeleteMapping("/campaign/{id}")
     ResponseEntity<Void> deleteCampaign(@PathVariable Long id);
 }
