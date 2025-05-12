@@ -9,11 +9,11 @@ import com.app.flexcart.flexcart.backend.domain.transaction.Order;
 
 public class FreeUnitsOnCategoryAction implements Action {
     private final int categoryId;
-    private final int numberOfFreeProducts;
+    private final int freeUnits;
 
-    public FreeUnitsOnCategoryAction(int categoryId, int numberOfFreeProducts) {
+    public FreeUnitsOnCategoryAction(int categoryId, int freeUnits) {
         this.categoryId = categoryId;
-        this.numberOfFreeProducts = numberOfFreeProducts;
+        this.freeUnits = freeUnits;
     }
 
     @Override
@@ -26,7 +26,7 @@ public class FreeUnitsOnCategoryAction implements Action {
                 .sorted(BigDecimal::compareTo)
                 .collect(Collectors.toList());
 
-        int freebies = Math.min(numberOfFreeProducts, unitPrices.size());
+        int freebies = Math.min(freeUnits, unitPrices.size());
 
         return unitPrices.stream()
                 .limit(freebies)

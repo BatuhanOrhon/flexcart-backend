@@ -7,11 +7,13 @@ import com.app.flexcart.flexcart.backend.domain.campaign.action.Action;
 import com.app.flexcart.flexcart.backend.domain.campaign.condition.Condition;
 import com.app.flexcart.flexcart.backend.domain.transaction.Order;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@AllArgsConstructor
 public class Campaign {
     private String name;
     private String description;

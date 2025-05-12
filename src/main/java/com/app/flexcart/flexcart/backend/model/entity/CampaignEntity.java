@@ -30,8 +30,6 @@ public class CampaignEntity {
     private LocalDateTime startDate;
     @Column
     private LocalDateTime endDate;
-    @Column
-    private int priority;
 
     @OneToMany(mappedBy = "campaign", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CampaignConditionEntity> conditions;
