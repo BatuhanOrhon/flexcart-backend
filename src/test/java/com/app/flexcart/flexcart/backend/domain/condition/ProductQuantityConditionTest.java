@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import com.app.flexcart.flexcart.backend.domain.campaign.condition.ProductQuantityCondition;
 import com.app.flexcart.flexcart.backend.domain.transaction.Cart;
 import com.app.flexcart.flexcart.backend.domain.transaction.CartItem;
-import com.app.flexcart.flexcart.backend.domain.transaction.Order;
 import com.app.flexcart.flexcart.backend.domain.transaction.Product;
 
 public class ProductQuantityConditionTest {
@@ -36,10 +35,7 @@ public class ProductQuantityConditionTest {
         Cart mockCart = mock(Cart.class);
         when(mockCart.getCartItems()).thenReturn(List.of(mockCartItem1, mockCartItem2));
 
-        Order mockOrder = mock(Order.class);
-        when(mockOrder.getCart()).thenReturn(mockCart);
-
-        boolean result = condition.isSatisfiedBy(mockOrder);
+        boolean result = condition.isSatisfiedBy(mockCart);
 
         assertTrue(result);
     }
@@ -59,10 +55,7 @@ public class ProductQuantityConditionTest {
         Cart mockCart = mock(Cart.class);
         when(mockCart.getCartItems()).thenReturn(List.of(mockCartItem));
 
-        Order mockOrder = mock(Order.class);
-        when(mockOrder.getCart()).thenReturn(mockCart);
-
-        boolean result = condition.isSatisfiedBy(mockOrder);
+        boolean result = condition.isSatisfiedBy(mockCart);
 
         assertFalse(result);
     }
@@ -82,10 +75,7 @@ public class ProductQuantityConditionTest {
         Cart mockCart = mock(Cart.class);
         when(mockCart.getCartItems()).thenReturn(List.of(mockCartItem));
 
-        Order mockOrder = mock(Order.class);
-        when(mockOrder.getCart()).thenReturn(mockCart);
-
-        boolean result = condition.isSatisfiedBy(mockOrder);
+        boolean result = condition.isSatisfiedBy(mockCart);
 
         assertFalse(result);
     }

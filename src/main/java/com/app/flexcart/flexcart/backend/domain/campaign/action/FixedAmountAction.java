@@ -2,7 +2,7 @@ package com.app.flexcart.flexcart.backend.domain.campaign.action;
 
 import java.math.BigDecimal;
 
-import com.app.flexcart.flexcart.backend.domain.transaction.Order;
+import com.app.flexcart.flexcart.backend.domain.transaction.Cart;
 
 public class FixedAmountAction implements Action {
     private final BigDecimal amount;
@@ -12,7 +12,7 @@ public class FixedAmountAction implements Action {
     }
 
     @Override
-    public BigDecimal apply(Order order) {
+    public BigDecimal apply(Cart order) {
         return amount;
     }
 }

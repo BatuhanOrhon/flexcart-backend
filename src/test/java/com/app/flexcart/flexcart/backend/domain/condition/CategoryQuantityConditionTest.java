@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import com.app.flexcart.flexcart.backend.domain.campaign.condition.CategoryQuantityCondition;
 import com.app.flexcart.flexcart.backend.domain.transaction.Cart;
 import com.app.flexcart.flexcart.backend.domain.transaction.CartItem;
-import com.app.flexcart.flexcart.backend.domain.transaction.Order;
 import com.app.flexcart.flexcart.backend.domain.transaction.Product;
 
 public class CategoryQuantityConditionTest {
@@ -35,10 +34,7 @@ public class CategoryQuantityConditionTest {
         Cart mockCart = mock(Cart.class);
         when(mockCart.getCartItems()).thenReturn(List.of(mockCartItem1, mockCartItem2));
 
-        Order mockOrder = mock(Order.class);
-        when(mockOrder.getCart()).thenReturn(mockCart);
-
-        boolean result = condition.isSatisfiedBy(mockOrder);
+        boolean result = condition.isSatisfiedBy(mockCart);
 
         assertTrue(result, "Condition should be satisfied when total quantity in the category exceeds 3.");
     }
@@ -46,7 +42,7 @@ public class CategoryQuantityConditionTest {
     @Test
     public void testIsSatisfiedBy_ConditionNotMet() {
         int categoryId = 1;
-        CategoryQuantityCondition condition = new CategoryQuantityCondition(categoryId,3);
+        CategoryQuantityCondition condition = new CategoryQuantityCondition(categoryId, 3);
 
         Product mockProduct = mock(Product.class);
         when(mockProduct.getCategoryId()).thenReturn(categoryId);
@@ -58,10 +54,7 @@ public class CategoryQuantityConditionTest {
         Cart mockCart = mock(Cart.class);
         when(mockCart.getCartItems()).thenReturn(List.of(mockCartItem));
 
-        Order mockOrder = mock(Order.class);
-        when(mockOrder.getCart()).thenReturn(mockCart);
-
-        boolean result = condition.isSatisfiedBy(mockOrder);
+        boolean result = condition.isSatisfiedBy(mockCart);
 
         assertFalse(result, "Condition should not be satisfied when total quantity in the category is 3 or less.");
     }
@@ -81,10 +74,7 @@ public class CategoryQuantityConditionTest {
         Cart mockCart = mock(Cart.class);
         when(mockCart.getCartItems()).thenReturn(List.of(mockCartItem));
 
-        Order mockOrder = mock(Order.class);
-        when(mockOrder.getCart()).thenReturn(mockCart);
-
-        boolean result = condition.isSatisfiedBy(mockOrder);
+        boolean result = condition.isSatisfiedBy(mockCart);
 
         assertFalse(result, "Condition should not be satisfied when no items match the category.");
     }

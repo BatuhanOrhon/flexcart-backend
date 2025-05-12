@@ -5,7 +5,6 @@ import java.math.RoundingMode;
 
 import com.app.flexcart.flexcart.backend.domain.transaction.Cart;
 import com.app.flexcart.flexcart.backend.domain.transaction.CartItem;
-import com.app.flexcart.flexcart.backend.domain.transaction.Order;
 
 public class PercentageOnCategoryAction implements Action {
     private final int categoryId;
@@ -16,8 +15,7 @@ public class PercentageOnCategoryAction implements Action {
         this.percent = pct;
     }
 
-    public BigDecimal apply(Order order) {
-        Cart cart = order.getCart();
+    public BigDecimal apply(Cart cart) {
         BigDecimal totalSub = cart.getCartItems().stream()
                 .filter(i -> i.getProduct().getCategoryId() == categoryId)
                 .map(CartItem::getSubTotalPrice)

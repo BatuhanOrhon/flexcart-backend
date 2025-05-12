@@ -2,8 +2,8 @@ package com.app.flexcart.flexcart.backend.domain.campaign.action;
 
 import java.math.BigDecimal;
 
-import com.app.flexcart.flexcart.backend.domain.transaction.Order;
+import com.app.flexcart.flexcart.backend.domain.transaction.Cart;
 
 public interface Action {
-    BigDecimal apply(Order order);
+    BigDecimal apply(Cart order);
 }

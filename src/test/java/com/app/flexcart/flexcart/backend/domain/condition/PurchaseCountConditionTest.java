@@ -8,7 +8,7 @@ import static org.mockito.Mockito.when;
 import org.junit.jupiter.api.Test;
 
 import com.app.flexcart.flexcart.backend.domain.campaign.condition.PurchaseCountCondition;
-import com.app.flexcart.flexcart.backend.domain.transaction.Order;
+import com.app.flexcart.flexcart.backend.domain.transaction.Cart;
 import com.app.flexcart.flexcart.backend.domain.user.User;
 import com.app.flexcart.flexcart.backend.service.OrderService;
 
@@ -22,12 +22,12 @@ public class PurchaseCountConditionTest {
         User mockUser = mock(User.class);
         when(mockUser.getUserId()).thenReturn(1L);
 
-        Order mockOrder = mock(Order.class);
-        when(mockOrder.getUser()).thenReturn(mockUser);
+        Cart mockCart = mock(Cart.class);
+        when(mockCart.getUser()).thenReturn(mockUser);
 
         when(mockOrderService.getOrderCountByUserId(1L)).thenReturn(4L);
 
-        boolean result = condition.isSatisfiedBy(mockOrder);
+        boolean result = condition.isSatisfiedBy(mockCart);
 
         assertTrue(result);
     }
@@ -41,12 +41,12 @@ public class PurchaseCountConditionTest {
         User mockUser = mock(User.class);
         when(mockUser.getUserId()).thenReturn(1L);
 
-        Order mockOrder = mock(Order.class);
-        when(mockOrder.getUser()).thenReturn(mockUser);
+        Cart mockCart = mock(Cart.class);
+        when(mockCart.getUser()).thenReturn(mockUser);
 
         when(mockOrderService.getOrderCountByUserId(1L)).thenReturn(3L);
 
-        boolean result = condition.isSatisfiedBy(mockOrder);
+        boolean result = condition.isSatisfiedBy(mockCart);
 
         assertFalse(result);
     }

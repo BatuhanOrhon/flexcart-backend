@@ -8,7 +8,7 @@ import static org.mockito.Mockito.when;
 import org.junit.jupiter.api.Test;
 
 import com.app.flexcart.flexcart.backend.domain.campaign.condition.UserTypeCondition;
-import com.app.flexcart.flexcart.backend.domain.transaction.Order;
+import com.app.flexcart.flexcart.backend.domain.transaction.Cart;
 import com.app.flexcart.flexcart.backend.domain.user.User;
 import com.app.flexcart.flexcart.backend.domain.user.UserType;
 
@@ -22,10 +22,10 @@ public class UserTypeConditionTest {
         User mockUser = mock(User.class);
         when(mockUser.getUserType()).thenReturn(UserType.PREMIUM);
 
-        Order mockOrder = mock(Order.class);
-        when(mockOrder.getUser()).thenReturn(mockUser);
+        Cart mockCart = mock(Cart.class);
+        when(mockCart.getUser()).thenReturn(mockUser);
 
-        boolean result = condition.isSatisfiedBy(mockOrder);
+        boolean result = condition.isSatisfiedBy(mockCart);
 
         assertTrue(result, "Condition should be satisfied when user type matches.");
     }
@@ -38,10 +38,10 @@ public class UserTypeConditionTest {
         User mockUser = mock(User.class);
         when(mockUser.getUserType()).thenReturn(UserType.STANDARD);
 
-        Order mockOrder = mock(Order.class);
-        when(mockOrder.getUser()).thenReturn(mockUser);
+        Cart mockCart = mock(Cart.class);
+        when(mockCart.getUser()).thenReturn(mockUser);
 
-        boolean result = condition.isSatisfiedBy(mockOrder);
+        boolean result = condition.isSatisfiedBy(mockCart);
 
         assertFalse(result, "Condition should not be satisfied when user type does not match.");
     }

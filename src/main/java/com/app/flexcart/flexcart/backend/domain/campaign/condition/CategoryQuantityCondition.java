@@ -1,7 +1,7 @@
 package com.app.flexcart.flexcart.backend.domain.campaign.condition;
 
+import com.app.flexcart.flexcart.backend.domain.transaction.Cart;
 import com.app.flexcart.flexcart.backend.domain.transaction.CartItem;
-import com.app.flexcart.flexcart.backend.domain.transaction.Order;
 
 public class CategoryQuantityCondition implements Condition {
     private final int categoryId;
@@ -14,8 +14,7 @@ public class CategoryQuantityCondition implements Condition {
     }
 
     @Override
-    public boolean isSatisfiedBy(Order order) {
-        var cart = order.getCart();
+    public boolean isSatisfiedBy(Cart cart) {
         int sum = cart.getCartItems().stream()
                 .filter(i -> i.getProduct().getCategoryId() == categoryId)
                 .mapToInt(CartItem::getQuantity)

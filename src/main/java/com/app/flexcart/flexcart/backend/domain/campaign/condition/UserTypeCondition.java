@@ -1,6 +1,6 @@
 package com.app.flexcart.flexcart.backend.domain.campaign.condition;
 
-import com.app.flexcart.flexcart.backend.domain.transaction.Order;
+import com.app.flexcart.flexcart.backend.domain.transaction.Cart;
 import com.app.flexcart.flexcart.backend.domain.user.User;
 import com.app.flexcart.flexcart.backend.domain.user.UserType;
 
@@ -12,8 +12,8 @@ public class UserTypeCondition implements Condition {
     }
 
     @Override
-    public boolean isSatisfiedBy(Order order) {
-        User user = order.getUser();
+    public boolean isSatisfiedBy(Cart cart) {
+        User user = cart.getUser();
         return user.getUserType().equals(userType);
     }
 }

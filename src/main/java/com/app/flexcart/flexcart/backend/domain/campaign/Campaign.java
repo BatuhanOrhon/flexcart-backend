@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.app.flexcart.flexcart.backend.domain.campaign.action.Action;
 import com.app.flexcart.flexcart.backend.domain.campaign.condition.Condition;
-import com.app.flexcart.flexcart.backend.domain.transaction.Order;
+import com.app.flexcart.flexcart.backend.domain.transaction.Cart;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,13 +20,13 @@ public class Campaign {
     private List<Condition> conditions;
     private List<Action> actions;
 
-    public BigDecimal calculateDiscount(Order order) {
+    public BigDecimal calculateDiscount(Cart cart) {
         return actions.stream()
-                .map(a -> a.apply(order))
+                .map(a -> a.apply(cart))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    public boolean isApplicable(Order order) {
-        return conditions.stream().allMatch(cond -> cond.isSatisfiedBy(order));
+    public boolean isApplicable(Cart cart) {
+        return conditions.stream().allMatch(cond -> cond.isSatisfiedBy(cart));
     }
 }

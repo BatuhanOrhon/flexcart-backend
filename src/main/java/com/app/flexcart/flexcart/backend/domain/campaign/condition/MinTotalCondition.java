@@ -3,7 +3,6 @@ package com.app.flexcart.flexcart.backend.domain.campaign.condition;
 import java.math.BigDecimal;
 
 import com.app.flexcart.flexcart.backend.domain.transaction.Cart;
-import com.app.flexcart.flexcart.backend.domain.transaction.Order;
 
 public class MinTotalCondition implements Condition {
     private final BigDecimal minTotal;
@@ -12,8 +11,7 @@ public class MinTotalCondition implements Condition {
         this.minTotal = minTotal;
     }
 
-    public boolean isSatisfiedBy(Order order) {
-        Cart cart = order.getCart();
+    public boolean isSatisfiedBy(Cart cart) {
         return cart.getTotal().compareTo(minTotal) >= 0;
     }
 }

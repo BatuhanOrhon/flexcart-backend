@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 
 import com.app.flexcart.flexcart.backend.domain.campaign.action.PercentageOnTotalAction;
 import com.app.flexcart.flexcart.backend.domain.transaction.Cart;
-import com.app.flexcart.flexcart.backend.domain.transaction.Order;
 
 public class PercentageOnTotalActionTest {
     @Test
@@ -21,10 +20,7 @@ public class PercentageOnTotalActionTest {
         Cart mockCart = mock(Cart.class);
         when(mockCart.getTotal()).thenReturn(new BigDecimal("200.00"));
 
-        Order mockOrder = mock(Order.class);
-        when(mockOrder.getCart()).thenReturn(mockCart);
-
-        BigDecimal result = action.apply(mockOrder);
+        BigDecimal result = action.apply(mockCart);
 
         assertEquals(new BigDecimal("20.00"), result);
     }
@@ -37,10 +33,7 @@ public class PercentageOnTotalActionTest {
         Cart mockCart = mock(Cart.class);
         when(mockCart.getTotal()).thenReturn(BigDecimal.ZERO);
 
-        Order mockOrder = mock(Order.class);
-        when(mockOrder.getCart()).thenReturn(mockCart);
-
-        BigDecimal result = action.apply(mockOrder);
+        BigDecimal result = action.apply(mockCart);
 
         assertEquals(BigDecimal.valueOf(0, 2), result);
     }
@@ -53,10 +46,7 @@ public class PercentageOnTotalActionTest {
         Cart mockCart = mock(Cart.class);
         when(mockCart.getTotal()).thenReturn(new BigDecimal("200.00"));
 
-        Order mockOrder = mock(Order.class);
-        when(mockOrder.getCart()).thenReturn(mockCart);
-
-        BigDecimal result = action.apply(mockOrder);
+        BigDecimal result = action.apply(mockCart);
 
         assertEquals(BigDecimal.valueOf(0, 2), result);
     }

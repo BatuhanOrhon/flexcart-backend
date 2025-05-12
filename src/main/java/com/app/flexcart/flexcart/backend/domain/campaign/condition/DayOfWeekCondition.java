@@ -1,8 +1,9 @@
 package com.app.flexcart.flexcart.backend.domain.campaign.condition;
 
 import java.time.DayOfWeek;
+import java.time.LocalDateTime;
 
-import com.app.flexcart.flexcart.backend.domain.transaction.Order;
+import com.app.flexcart.flexcart.backend.domain.transaction.Cart;
 
 public class DayOfWeekCondition implements Condition {
     private final DayOfWeek dayOfWeek;
@@ -12,7 +13,7 @@ public class DayOfWeekCondition implements Condition {
     }
 
     @Override
-    public boolean isSatisfiedBy(Order order) {
-        return dayOfWeek.equals(order.getOrderDate().getDayOfWeek());
+    public boolean isSatisfiedBy(Cart cart) {
+        return dayOfWeek.equals(LocalDateTime.now().getDayOfWeek());
     }
 }

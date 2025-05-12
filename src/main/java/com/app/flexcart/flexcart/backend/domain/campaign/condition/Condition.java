@@ -1,7 +1,7 @@
 package com.app.flexcart.flexcart.backend.domain.campaign.condition;
 
-import com.app.flexcart.flexcart.backend.domain.transaction.Order;
+import com.app.flexcart.flexcart.backend.domain.transaction.Cart;
 
 public interface Condition {
-    boolean isSatisfiedBy(Order order);
+    boolean isSatisfiedBy(Cart order);
 }

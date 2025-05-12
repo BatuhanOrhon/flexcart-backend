@@ -2,41 +2,39 @@ package com.app.flexcart.flexcart.backend.domain.condition;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
+import java.time.temporal.TemporalAdjusters;
 
 import org.junit.jupiter.api.Test;
 
 import com.app.flexcart.flexcart.backend.domain.campaign.condition.DayOfWeekCondition;
-import com.app.flexcart.flexcart.backend.domain.transaction.Order;
 
 public class DayOfWeekConditionTest {
     @Test
     public void testIsSatisfiedBy_ConditionMet() {
-        DayOfWeek expectedDay = DayOfWeek.MONDAY;
-        DayOfWeekCondition condition = new DayOfWeekCondition(expectedDay);
+        DayOfWeek today = LocalDateTime.now().getDayOfWeek();
+        DayOfWeekCondition condition = new DayOfWeekCondition(today);
 
-        Order mockOrder = mock(Order.class);
-        when(mockOrder.getOrderDate()).thenReturn(LocalDateTime.of(2025, 5, 12, 10, 0)); // Monday
+        boolean result = condition.isSatisfiedBy(null);
 
-        boolean result = condition.isSatisfiedBy(mockOrder);
-
-        assertTrue(result);
+        assertTrue(result, "Condition should be satisfied when the current day matches.");
     }
 
     @Test
     public void testIsSatisfiedBy_ConditionNotMet() {
-        DayOfWeek expectedDay = DayOfWeek.MONDAY;
-        DayOfWeekCondition condition = new DayOfWeekCondition(expectedDay);
+        DayOfWeek notToday = LocalDateTime.now()
+                .with(TemporalAdjusters.next(DayOfWeek.MONDAY))
+                .getDayOfWeek();
+        if (notToday == LocalDateTime.now().getDayOfWeek()) {
+            notToday = DayOfWeek.TUESDAY; // Fallback to ensure it's not today
+        }
 
-        Order mockOrder = mock(Order.class);
-        when(mockOrder.getOrderDate()).thenReturn(LocalDateTime.of(2025, 5, 13, 10, 0)); // Tuesday
+        DayOfWeekCondition condition = new DayOfWeekCondition(notToday);
 
-        boolean result = condition.isSatisfiedBy(mockOrder);
+        boolean result = condition.isSatisfiedBy(null);
 
-        assertFalse(result);
+        assertFalse(result, "Condition should not be satisfied when the current day does not match.");
     }
 }

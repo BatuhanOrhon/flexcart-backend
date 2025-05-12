@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import com.app.flexcart.flexcart.backend.domain.campaign.condition.MinTotalCondition;
 import com.app.flexcart.flexcart.backend.domain.transaction.Cart;
-import com.app.flexcart.flexcart.backend.domain.transaction.Order;
+import com.app.flexcart.flexcart.backend.domain.transaction.Cart;
 
 public class MinTotalConditionTest {
     @Test
@@ -22,10 +22,9 @@ public class MinTotalConditionTest {
         Cart mockCart = mock(Cart.class);
         when(mockCart.getTotal()).thenReturn(new BigDecimal("150.00"));
 
-        Order mockOrder = mock(Order.class);
-        when(mockOrder.getCart()).thenReturn(mockCart);
 
-        boolean result = condition.isSatisfiedBy(mockOrder);
+
+        boolean result = condition.isSatisfiedBy(mockCart);
 
         assertTrue(result);
     }
@@ -38,10 +37,9 @@ public class MinTotalConditionTest {
         Cart mockCart = mock(Cart.class);
         when(mockCart.getTotal()).thenReturn(new BigDecimal("50.00"));
 
-        Order mockOrder = mock(Order.class);
-        when(mockOrder.getCart()).thenReturn(mockCart);
 
-        boolean result = condition.isSatisfiedBy(mockOrder);
+
+        boolean result = condition.isSatisfiedBy(mockCart);
 
         assertFalse(result);
     }
