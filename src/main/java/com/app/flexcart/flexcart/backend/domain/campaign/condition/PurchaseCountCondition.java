@@ -1,19 +1,19 @@
 package com.app.flexcart.flexcart.backend.domain.campaign.condition;
 
 import com.app.flexcart.flexcart.backend.domain.transaction.Order;
-import com.app.flexcart.flexcart.backend.service.UserService;
+import com.app.flexcart.flexcart.backend.service.OrderService;
 
 public class PurchaseCountCondition implements Condition {
     private final int nth;
-    private final UserService userService;
+    private final OrderService orderService;
 
-    public PurchaseCountCondition(int nth, UserService userService) {
+    public PurchaseCountCondition(int nth, OrderService orderService) {
         this.nth = nth;
-        this.userService = userService;
+        this.orderService = orderService;
     }
 
     @Override
     public boolean isSatisfiedBy(Order order) {
-        return userService.getOrderCount(order.getUser().getUserId()) + 1 == nth;
+        return orderService.getOrderCountByUserId(order.getUser().getUserId()) + 1 == nth;
     }
 }
