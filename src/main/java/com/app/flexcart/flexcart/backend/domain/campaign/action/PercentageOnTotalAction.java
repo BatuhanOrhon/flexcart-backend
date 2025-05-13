@@ -18,6 +18,6 @@ public class PercentageOnTotalAction implements Action {
     }
 
     public BigDecimal apply(Cart cart) {
-        return cart.getTotal().multiply(percent).divide(BigDecimal.valueOf(10000, 2), 2, RoundingMode.UNNECESSARY);
+        return cart.getTotal().multiply(percent).divide(BigDecimal.valueOf(10000, 2), 2, RoundingMode.HALF_EVEN);
     }
 }
