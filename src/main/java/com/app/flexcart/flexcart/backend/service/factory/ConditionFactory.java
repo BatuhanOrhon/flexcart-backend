@@ -19,14 +19,12 @@ import com.app.flexcart.flexcart.backend.domain.campaign.condition.UserTypeCondi
 import com.app.flexcart.flexcart.backend.domain.user.UserType;
 import com.app.flexcart.flexcart.backend.exception.ConditionFactoryException;
 import com.app.flexcart.flexcart.backend.exception.ConditionFactoryParameterCannotBeNullException;
-import com.app.flexcart.flexcart.backend.service.OrderService;
 
 import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
 public class ConditionFactory {
-    private final OrderService orderService;
 
     public Condition createCondition(ConditionType conditionType, Map<String, Object> params) {
         switch (conditionType) {

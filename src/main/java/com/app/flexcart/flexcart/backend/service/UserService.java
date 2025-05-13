@@ -9,6 +9,7 @@ import com.app.flexcart.flexcart.backend.domain.user.User;
 import com.app.flexcart.flexcart.backend.domain.user.UserType;
 import com.app.flexcart.flexcart.backend.exception.UserNotFoundException;
 import com.app.flexcart.flexcart.backend.model.entity.UserEntity;
+import com.app.flexcart.flexcart.backend.model.repository.OrderRepository;
 import com.app.flexcart.flexcart.backend.model.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -19,16 +20,27 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    private final OrderService orderService;
+    private final OrderRepository orderRepository;
 
     public UserType getUserType(Long userId) {
-        if (orderService.isTotalPaymentMoreThan(userId, BigDecimal.valueOf(5000))) {
+        if (isTotalPaymentMoreThan(userId, BigDecimal.valueOf(5000))) {
             return UserType.PREMIUM;
         } else if (isNewUser(userId)) {
             return UserType.NEW;
         } else {
             return UserType.STANDARD;
         }
+    }
+
+    public Boolean isTotalPaymentMoreThan(Long userId, BigDecimal amount) {
+        return getUserPaymentLastYear(userId).compareTo(amount) > 0;
+    }
+
+    private BigDecimal getUserPaymentLastYear(Long userId) {
+        var orders = orderRepository.findByUser_UserIdAndOrderDateAfter(userId, LocalDateTime.now().minusYears(1));
+        return orders.stream()
+                .map(o -> o.getTotal().subtract(o.getDiscount()))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     private Boolean isNewUser(Long userId) {
@@ -55,7 +67,11 @@ public class UserService {
         var userDomain = new User();
         userDomain.setUserId(user.getUserId());
         userDomain.setUserType(userType);
-        userDomain.setOrderCount(orderService.getOrderCountByUserId(user.getUserId()));
+        userDomain.setOrderCount(getOrderCountByUserId(user.getUserId()));
         return userDomain;
+    }
+
+    public long getOrderCountByUserId(Long userId) {
+        return orderRepository.countByUser_UserId(userId);
     }
 }
