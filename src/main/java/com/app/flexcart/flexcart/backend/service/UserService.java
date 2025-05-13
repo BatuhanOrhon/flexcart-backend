@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.app.flexcart.flexcart.backend.domain.user.User;
 import com.app.flexcart.flexcart.backend.domain.user.UserType;
+import com.app.flexcart.flexcart.backend.exception.UserNotFoundException;
 import com.app.flexcart.flexcart.backend.model.entity.UserEntity;
 import com.app.flexcart.flexcart.backend.model.repository.UserRepository;
 
@@ -23,7 +24,7 @@ public class UserService {
     public UserType getUserType(Long userId) {
         if (orderService.getUserPaymentLastYear(userId).compareTo(BigDecimal.valueOf(5000)) > 0) {
             return UserType.PREMIUM;
-        } else if (userRepository.findById(userId).orElseThrow().getRegisterDate()
+        } else if (userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId)).getRegisterDate()
                 .isAfter(LocalDateTime.now().minusMonths(1))) {
             return UserType.NEW;
         } else {
@@ -38,7 +39,8 @@ public class UserService {
         user.setRegisterDate(LocalDateTime.now());
         userRepository.save(user);
     }
-
+    
+    // TODO silinecek?
     public User generateUserById(Long userId) {
         var userType = getUserType(userId);
         var user = new User();
@@ -48,7 +50,7 @@ public class UserService {
     }
 
     public UserEntity getUserEntityById(Long userId) {
-        return userRepository.findById(userId).orElseThrow();
+        return userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
     }
 
     public User getUserFromEntity(UserEntity user) {

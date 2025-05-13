@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.app.flexcart.flexcart.backend.domain.transaction.Cart;
 import com.app.flexcart.flexcart.backend.domain.transaction.CartItem;
 import com.app.flexcart.flexcart.backend.domain.transaction.Product;
+import com.app.flexcart.flexcart.backend.exception.CartNotFoundException;
 import com.app.flexcart.flexcart.backend.model.entity.CartEntity;
 import com.app.flexcart.flexcart.backend.model.entity.CartItemEntity;
 import com.app.flexcart.flexcart.backend.model.entity.ProductEntity;
@@ -56,7 +57,7 @@ public class CartService {
     }
 
     public Cart getCart(Long userId) {
-        var cartEntity = cartRepository.findByUser_UserId(userId).orElseThrow();
+        var cartEntity = cartRepository.findByUser_UserId(userId).orElseThrow(() -> new CartNotFoundException("Cart not found for user with ID: " + userId));
         var cart = generateCart(cartEntity);
         return cart;
     }
