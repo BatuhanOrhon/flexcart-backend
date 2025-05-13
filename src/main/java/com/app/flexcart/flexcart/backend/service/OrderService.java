@@ -26,6 +26,10 @@ public class OrderService {
 
     private final CampaignService campaignService;
 
+    public List<OrderEntity> getOrders(Long userId) {
+        return orderRepository.findByUser_UserId(userId);
+    }
+
     @Transactional
     public void placeOrder(Long userId) {
         var cart = cartService.getCart(userId);
