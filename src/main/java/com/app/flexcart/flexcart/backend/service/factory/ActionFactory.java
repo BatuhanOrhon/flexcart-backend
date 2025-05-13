@@ -18,7 +18,6 @@ import com.app.flexcart.flexcart.backend.exception.ActionFactoryException;
 import com.app.flexcart.flexcart.backend.exception.ActionFactoryParameterCannotBeNullException;
 
 @Component
-// TODO @RequiredArgsConstructor neden yok?
 public class ActionFactory {
 
     public Action createAction(ActionType actionType, Map<String, Object> params) {
@@ -29,7 +28,8 @@ public class ActionFactory {
             case FIXED_AMOUNT:
                 var amount = params.get("amount");
                 if (amount == null) {
-                    throw new ActionFactoryParameterCannotBeNullException("Amount cannot be null for FIXED_AMOUNT action");
+                    throw new ActionFactoryParameterCannotBeNullException(
+                            "Amount cannot be null for FIXED_AMOUNT action");
                 }
                 return new FixedAmountAction(BigDecimal.valueOf((Double) amount));
 
@@ -38,10 +38,12 @@ public class ActionFactory {
                 var freeUnits = params.get("freeUnits");
 
                 if (categoryId == null) {
-                    throw new ActionFactoryParameterCannotBeNullException("Category ID cannot be null for FREE_UNITS_ON_CATEGORY action");
+                    throw new ActionFactoryParameterCannotBeNullException(
+                            "Category ID cannot be null for FREE_UNITS_ON_CATEGORY action");
                 }
                 if (freeUnits == null) {
-                    throw new ActionFactoryParameterCannotBeNullException("Free units cannot be null for FREE_UNITS_ON_CATEGORY action");
+                    throw new ActionFactoryParameterCannotBeNullException(
+                            "Free units cannot be null for FREE_UNITS_ON_CATEGORY action");
                 }
 
                 return new FreeUnitsOnCategoryAction((Integer) categoryId, (Integer) freeUnits);
@@ -51,10 +53,12 @@ public class ActionFactory {
                 var percent = params.get("percent");
 
                 if (categoryIdPct == null) {
-                    throw new ActionFactoryParameterCannotBeNullException("Category ID cannot be null for PERCENTAGE_ON_CATEGORY action");
+                    throw new ActionFactoryParameterCannotBeNullException(
+                            "Category ID cannot be null for PERCENTAGE_ON_CATEGORY action");
                 }
                 if (percent == null) {
-                    throw new ActionFactoryParameterCannotBeNullException("Percentage cannot be null for PERCENTAGE_ON_CATEGORY action");
+                    throw new ActionFactoryParameterCannotBeNullException(
+                            "Percentage cannot be null for PERCENTAGE_ON_CATEGORY action");
                 }
 
                 return new PercentageOnCategoryAction((Integer) categoryIdPct, BigDecimal.valueOf((Double) percent));
@@ -64,10 +68,12 @@ public class ActionFactory {
                 var percentProduct = params.get("percent");
 
                 if (productId == null) {
-                    throw new ActionFactoryParameterCannotBeNullException("Product ID cannot be null for PERCENTAGE_ON_PRODUCT action");
+                    throw new ActionFactoryParameterCannotBeNullException(
+                            "Product ID cannot be null for PERCENTAGE_ON_PRODUCT action");
                 }
                 if (percentProduct == null) {
-                    throw new ActionFactoryParameterCannotBeNullException("Percentage cannot be null for PERCENTAGE_ON_PRODUCT action");
+                    throw new ActionFactoryParameterCannotBeNullException(
+                            "Percentage cannot be null for PERCENTAGE_ON_PRODUCT action");
                 }
 
                 return new PercentageOnCategoryAction((Integer) productId, BigDecimal.valueOf((Double) percentProduct));
@@ -76,7 +82,8 @@ public class ActionFactory {
                 var percentTotal = params.get("percent");
 
                 if (percentTotal == null) {
-                    throw new ActionFactoryParameterCannotBeNullException("Percentage cannot be null for PERCENTAGE_ON_TOTAL action");
+                    throw new ActionFactoryParameterCannotBeNullException(
+                            "Percentage cannot be null for PERCENTAGE_ON_TOTAL action");
                 }
 
                 return new PercentageOnTotalAction(BigDecimal.valueOf((Double) percentTotal));
@@ -89,7 +96,7 @@ public class ActionFactory {
 
     public List<Action> getActionList(List<ActionRequest> actions) {
         return actions.stream()
-            .map(ar -> createAction(ar.getType(), ar.getParameters()))
-            .toList();
+                .map(ar -> createAction(ar.getType(), ar.getParameters()))
+                .toList();
     }
 }
