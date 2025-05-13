@@ -35,10 +35,12 @@ public class ConditionFactory {
                 var quantity = params.get("quantity");
 
                 if (category == null) {
-                    throw new ConditionFactoryParameterCannotBeNullException("Category ID cannot be null for CATEGORY_QUANTITY condition");
+                    throw new ConditionFactoryParameterCannotBeNullException(
+                            "Category ID cannot be null for CATEGORY_QUANTITY condition");
                 }
                 if (quantity == null) {
-                    throw new ConditionFactoryParameterCannotBeNullException("Quantity cannot be null for CATEGORY_QUANTITY condition");
+                    throw new ConditionFactoryParameterCannotBeNullException(
+                            "Quantity cannot be null for CATEGORY_QUANTITY condition");
                 }
 
                 return new CategoryQuantityCondition((Integer) category, (Integer) quantity);
@@ -47,7 +49,8 @@ public class ConditionFactory {
                 var dayOfWeek = params.get("dayOfWeek");
 
                 if (dayOfWeek == null) {
-                    throw new ConditionFactoryParameterCannotBeNullException("Day of week cannot be null for DAY_OF_WEEK condition");
+                    throw new ConditionFactoryParameterCannotBeNullException(
+                            "Day of week cannot be null for DAY_OF_WEEK condition");
                 }
 
                 DayOfWeek day = DayOfWeek.valueOf(((String) dayOfWeek).toUpperCase());
@@ -57,7 +60,8 @@ public class ConditionFactory {
                 var minTotal = params.get("minTotal");
 
                 if (minTotal == null) {
-                    throw new ConditionFactoryParameterCannotBeNullException("Min total cannot be null for MIN_TOTAL condition");
+                    throw new ConditionFactoryParameterCannotBeNullException(
+                            "Min total cannot be null for MIN_TOTAL condition");
                 }
 
                 return new MinTotalCondition(BigDecimal.valueOf((Integer) minTotal));
@@ -67,10 +71,12 @@ public class ConditionFactory {
                 var productQuantity = params.get("productQuantity");
 
                 if (productId == null) {
-                    throw new ConditionFactoryParameterCannotBeNullException("Product ID cannot be null for PRODUCT_QUANTITY condition");
+                    throw new ConditionFactoryParameterCannotBeNullException(
+                            "Product ID cannot be null for PRODUCT_QUANTITY condition");
                 }
                 if (productQuantity == null) {
-                    throw new ConditionFactoryParameterCannotBeNullException("Product quantity cannot be null for PRODUCT_QUANTITY condition");
+                    throw new ConditionFactoryParameterCannotBeNullException(
+                            "Product quantity cannot be null for PRODUCT_QUANTITY condition");
                 }
 
                 return new ProductQuantityCondition((Long) productId, (Integer) productQuantity);
@@ -79,16 +85,18 @@ public class ConditionFactory {
                 var purchaseCount = params.get("nth");
 
                 if (purchaseCount == null) {
-                    throw new ConditionFactoryParameterCannotBeNullException("Purchase count cannot be null for PURCHASE_COUNT condition");
+                    throw new ConditionFactoryParameterCannotBeNullException(
+                            "Purchase count cannot be null for PURCHASE_COUNT condition");
                 }
 
-                return new PurchaseCountCondition((Integer) purchaseCount, orderService);
+                return new PurchaseCountCondition((Integer) purchaseCount);
 
             case USER_TYPE:
                 var userType = params.get("userType");
 
                 if (userType == null) {
-                    throw new ConditionFactoryParameterCannotBeNullException("User type cannot be null for USER_TYPE condition");
+                    throw new ConditionFactoryParameterCannotBeNullException(
+                            "User type cannot be null for USER_TYPE condition");
                 }
 
                 UserType userTypeEnum = UserType.valueOf(((String) userType).toUpperCase());
@@ -98,9 +106,9 @@ public class ConditionFactory {
         }
     }
 
-        public List<Condition> getConditionList(List<ConditionRequest> requests) {
+    public List<Condition> getConditionList(List<ConditionRequest> requests) {
         return requests.stream()
-            .map(r -> createCondition(r.getType(), r.getParameters()))
-            .toList();
+                .map(r -> createCondition(r.getType(), r.getParameters()))
+                .toList();
     }
 }

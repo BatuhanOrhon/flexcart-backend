@@ -17,19 +17,24 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class UserService {
 
-    private final OrderService orderService;
-
     private final UserRepository userRepository;
 
+    private final OrderService orderService;
+
     public UserType getUserType(Long userId) {
-        if (orderService.getUserPaymentLastYear(userId).compareTo(BigDecimal.valueOf(5000)) > 0) {
+        if (orderService.isTotalPaymentMoreThan(userId, BigDecimal.valueOf(5000))) {
             return UserType.PREMIUM;
-        } else if (userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId)).getRegisterDate()
-                .isAfter(LocalDateTime.now().minusMonths(1))) {
+        } else if (isNewUser(userId)) {
             return UserType.NEW;
         } else {
             return UserType.STANDARD;
         }
+    }
+
+    private Boolean isNewUser(Long userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId)).getRegisterDate()
+                .isAfter(LocalDateTime.now().minusMonths(1));
     }
 
     public void saveUser(String name, String surname) {
@@ -39,18 +44,10 @@ public class UserService {
         user.setRegisterDate(LocalDateTime.now());
         userRepository.save(user);
     }
-    
-    // TODO silinecek?
-    public User generateUserById(Long userId) {
-        var userType = getUserType(userId);
-        var user = new User();
-        user.setUserId(userId);
-        user.setUserType(userType);
-        return user;
-    }
 
     public UserEntity getUserEntityById(Long userId) {
-        return userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found with ID: " + userId));
     }
 
     public User getUserFromEntity(UserEntity user) {
@@ -58,6 +55,7 @@ public class UserService {
         var userDomain = new User();
         userDomain.setUserId(user.getUserId());
         userDomain.setUserType(userType);
+        userDomain.setOrderCount(orderService.getOrderCountByUserId(user.getUserId()));
         return userDomain;
     }
 }
