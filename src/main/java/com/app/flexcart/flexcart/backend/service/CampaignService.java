@@ -80,7 +80,8 @@ public class CampaignService {
     }
 
     public void deleteCampaign(Long campaignId) {
-        var campaign = campaignRepository.findById(campaignId).orElseThrow();
+        var campaign = campaignRepository.findById(campaignId).orElseThrow( () -> new RuntimeException(
+                "Campaign not found"));
         campaignRepository.delete(campaign);
     }
 
