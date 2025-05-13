@@ -4,6 +4,14 @@ This project is part of the **FlexCart Backend**, designed to provide a flexible
 
 ---
 
+## Entity Relationship Diagram
+
+Below is the Entity Relationship Diagram (ERD) for the FlexCart Backend:
+
+![Entity Relationship Diagram](image/ER%20Diagram.png)
+
+---
+
 ## Features
 
 - **Flexible Campaign Structure**: Campaigns are built using a combination of `Condition` and `Action` classes, making it easy to define complex promotional rules.
@@ -96,6 +104,8 @@ public interface Action {
   "type": "PRICE"
 }
 ```
+
+#### Note: "type" parameter is used to set if Campaign is a PRICE or SHIPPING campaign. If shipping, the campaign added after the best possible PRICE campaign is applied.
 
 ---
 
