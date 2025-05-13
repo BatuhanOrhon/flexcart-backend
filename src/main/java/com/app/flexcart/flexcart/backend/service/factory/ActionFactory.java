@@ -22,6 +22,9 @@ import com.app.flexcart.flexcart.backend.exception.ActionFactoryParameterCannotB
 public class ActionFactory {
 
     public Action createAction(ActionType actionType, Map<String, Object> params) {
+        if (actionType == null) {
+            throw new ActionFactoryException("Unknown action type: " + actionType);
+        }
         switch (actionType) {
             case FIXED_AMOUNT:
                 var amount = params.get("amount");

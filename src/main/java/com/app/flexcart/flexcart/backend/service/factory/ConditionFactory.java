@@ -27,6 +27,9 @@ import lombok.RequiredArgsConstructor;
 public class ConditionFactory {
 
     public Condition createCondition(ConditionType conditionType, Map<String, Object> params) {
+        if (conditionType == null) {
+            throw new ConditionFactoryException("Unknown condition type: " + conditionType);
+        }
         switch (conditionType) {
             case CATEGORY_QUANTITY:
                 var category = params.get("categoryId");

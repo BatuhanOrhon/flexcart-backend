@@ -14,6 +14,7 @@ import com.app.flexcart.flexcart.backend.controller.schema.PostCampaignRequest.C
 import com.app.flexcart.flexcart.backend.domain.campaign.Campaign;
 import com.app.flexcart.flexcart.backend.domain.campaign.CampaignType;
 import com.app.flexcart.flexcart.backend.domain.transaction.Cart;
+import com.app.flexcart.flexcart.backend.exception.CampaignNotFoundException;
 import com.app.flexcart.flexcart.backend.model.repository.CampaignRepository;
 import com.app.flexcart.flexcart.backend.service.factory.CampaignEntityFactory;
 import com.app.flexcart.flexcart.backend.service.factory.CampaignFactory;
@@ -80,7 +81,7 @@ public class CampaignService {
     }
 
     public void deleteCampaign(Long campaignId) {
-        var campaign = campaignRepository.findById(campaignId).orElseThrow( () -> new RuntimeException(
+        var campaign = campaignRepository.findById(campaignId).orElseThrow(() -> new CampaignNotFoundException(
                 "Campaign not found"));
         campaignRepository.delete(campaign);
     }

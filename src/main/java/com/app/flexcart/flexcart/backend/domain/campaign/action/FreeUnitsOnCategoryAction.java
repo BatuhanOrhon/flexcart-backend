@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.app.flexcart.flexcart.backend.domain.transaction.Cart;
+import lombok.Getter;
 
+@Getter
 public class FreeUnitsOnCategoryAction implements Action {
     private final int categoryId;
     private final int freeUnits;

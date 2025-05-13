@@ -5,7 +5,9 @@ import java.math.RoundingMode;
 
 import com.app.flexcart.flexcart.backend.domain.transaction.Cart;
 import com.app.flexcart.flexcart.backend.domain.transaction.CartItem;
+import lombok.Getter;
 
+@Getter
 public class PercentageOnCategoryAction implements Action {
     private final int categoryId;
     private final BigDecimal percent;
