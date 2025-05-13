@@ -1,5 +1,6 @@
 package com.app.flexcart.flexcart.backend.service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
@@ -42,7 +43,8 @@ public class CampaignService {
     // TODO add free shipping logic
     public Optional<Campaign> findBestCampaign(Cart cart) {
         return getActiveCampaigns().stream().filter(c -> c.isApplicable(cart))
-                .max(Comparator.comparing(c -> c.calculateDiscount(cart)));
+                .max(Comparator.comparing(c -> c.calculateDiscount(cart)))
+                .filter(c -> c.calculateDiscount(cart).compareTo(BigDecimal.ZERO) > 0);
     }
 
     public List<Campaign> getActiveCampaigns() {

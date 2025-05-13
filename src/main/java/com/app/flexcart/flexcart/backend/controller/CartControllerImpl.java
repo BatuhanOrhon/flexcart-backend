@@ -1,5 +1,6 @@
 package com.app.flexcart.flexcart.backend.controller;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import org.springframework.http.ResponseEntity;
@@ -36,12 +37,23 @@ public class CartControllerImpl implements ICartController {
         if (cart.getCartItems().isEmpty()) {
             return ResponseEntity.noContent().build();
         }
-        var campaign = campaignService.findBestCampaign(cart).orElseThrow();// TODO handle this exception
+        var campaign = campaignService.findBestCampaign(cart);
+
+        var campaignList = new ArrayList<Campaign>();
+
+        campaign.ifPresent(c -> {
+            campaignList.add(campaign.get());
+        });
+
         GetCartResponse response = new GetCartResponse();
         response.setItems(cartItemResponseGenerator.generateCartItemResponseList(cart));
-        var campaignList = new ArrayList<Campaign>();
-        campaignList.add(campaign);
+
         response.setCampaigns(campaignResponseGenerator.generateCampaignResponseList(campaignList));
+        response.setDiscount(campaignList.stream()
+                .map((c) -> c.calculateDiscount(cart))
+                .reduce(BigDecimal.ZERO, BigDecimal::add));
+        response.setTotalPrice(cart.getTotal());
+        response.setShippingFee(cart.getShippingFee());
         return ResponseEntity.ok(response);
     }
 
