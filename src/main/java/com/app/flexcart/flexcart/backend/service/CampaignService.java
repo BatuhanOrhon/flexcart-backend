@@ -3,7 +3,6 @@ package com.app.flexcart.flexcart.backend.service;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -16,36 +15,35 @@ import com.app.flexcart.flexcart.backend.domain.campaign.action.ActionType;
 import com.app.flexcart.flexcart.backend.domain.campaign.condition.Condition;
 import com.app.flexcart.flexcart.backend.domain.campaign.condition.ConditionType;
 import com.app.flexcart.flexcart.backend.domain.transaction.Cart;
+import com.app.flexcart.flexcart.backend.exception.InvalidParametersFormatException;
 import com.app.flexcart.flexcart.backend.model.entity.CampaignActionEntity;
 import com.app.flexcart.flexcart.backend.model.entity.CampaignConditionEntity;
 import com.app.flexcart.flexcart.backend.model.entity.CampaignEntity;
 import com.app.flexcart.flexcart.backend.model.repository.CampaignRepository;
 import com.app.flexcart.flexcart.backend.service.factory.ActionFactory;
+import com.app.flexcart.flexcart.backend.service.factory.CampaignFactory;
 import com.app.flexcart.flexcart.backend.service.factory.ConditionFactory;
+import com.app.flexcart.flexcart.backend.util.ParameterParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class CampaignService {
 
     private final ConditionFactory conditionFactory;
     private final ActionFactory actionFactory;
+    private final CampaignFactory campaignFactory;
     private final CampaignRepository campaignRepository;
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private final ParameterParser parameterParser;
 
     // TODO add free shipping logic
     public Optional<Campaign> findBestCampaign(Cart cart) {
         return getActiveCampaigns().stream().filter(c -> c.isApplicable(cart))
                 .max(Comparator.comparing(c -> c.calculateDiscount(cart)));
-    }
-
-    public Campaign getCampaignObject(String name, String description, List<Action> actions,
-            List<Condition> conditions) {
-        return new Campaign(name, description, conditions, actions);
     }
 
     public List<Campaign> getActiveCampaigns() {
@@ -55,7 +53,8 @@ public class CampaignService {
                     var actions = getActions(campaignEntity);
 
                     var conditions = getConditions(campaignEntity);
-                    return getCampaignObject(campaignEntity.getName(), campaignEntity.getDescription(), actions,
+                    return campaignFactory.getCampaignObject(campaignEntity.getName(), campaignEntity.getDescription(),
+                            actions,
                             conditions);
                 })
                 .toList();
@@ -63,33 +62,43 @@ public class CampaignService {
 
     private List<Condition> getConditions(CampaignEntity campaignEntity) {
         return campaignEntity.getConditions().stream()
-                .map(conditionEntity -> conditionFactory.createCondition(
-                        ConditionType.valueOf(conditionEntity.getType()),
-                        getParams(conditionEntity.getParams())))
+                .map(conditionEntity -> {
+                    try {
+                        return conditionFactory.createCondition(
+                                ConditionType.valueOf(conditionEntity.getType()),
+                                parameterParser.parse(conditionEntity.getParams()));
+                    } catch (JsonProcessingException e) {
+                        log.error(
+                                "Error parsing condition parameters of campaign with campaignId = %s. It will be skipped.",
+                                e);
+                        return null;
+                    }
+                }).filter(condition -> condition != null)
                 .toList();
     }
 
     private List<Action> getActions(CampaignEntity campaignEntity) {
         return campaignEntity.getActions().stream()
-                .map(actionEntity -> actionFactory.createAction(ActionType.valueOf(actionEntity.getType()),
-                        getParams(actionEntity.getParams())))
+                .map(actionEntity -> {
+                    try {
+                        return actionFactory.createAction(ActionType.valueOf(actionEntity.getType()),
+                                parameterParser.parse(actionEntity.getParams()));
+                    } catch (JsonProcessingException e) {
+                        log.error(
+                                "Error parsing action parameters of campaign with campaignId = %s. It will be skipped.",
+                                e);
+                        return null;
+                    }
+                }).filter(action -> action != null)
                 .toList();
-    }
-
-    private Map<String, Object> getParams(String params) {
-        try {
-            return objectMapper.readValue(params, new TypeReference<Map<String, Object>>() {
-            });
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);// TODO handle
-        }
     }
 
     public void saveCampaign(String name, String description, List<ActionRequest> actions,
             List<ConditionRequest> conditions,
             LocalDateTime startDate, LocalDateTime endDate) {
 
-        isValidCampaign(name, description, actions, conditions);
+        // TODO Might be a better logic
+        campaignFactory.createCampaign(name, description, actions, conditions);
         var campaignEntity = new CampaignEntity();
         campaignEntity.setName(name);
         campaignEntity.setDescription(description);
@@ -109,9 +118,10 @@ public class CampaignService {
                     var conditionEntity = new CampaignConditionEntity();
                     conditionEntity.setType(conditionRequest.getType().name());
                     try {
-                        conditionEntity.setParams(objectMapper.writeValueAsString(conditionRequest.getParameters()));
+                        conditionEntity
+                                .setParams(parameterParser.convertToJsonString(conditionRequest.getParameters()));
                     } catch (JsonProcessingException e) {
-                        throw new RuntimeException(e);// TODO handle
+                        throw new InvalidParametersFormatException("Invalid JSON format");
                     }
                     conditionEntity.setCampaign(campaignEntity);
                     return conditionEntity;
@@ -126,34 +136,13 @@ public class CampaignService {
                     var actionEntity = new CampaignActionEntity();
                     actionEntity.setType(actionRequest.getType().name());
                     try {
-                        actionEntity.setParams(objectMapper.writeValueAsString(actionRequest.getParameters()));
+                        actionEntity.setParams(parameterParser.convertToJsonString(actionRequest.getParameters()));
                     } catch (JsonProcessingException e) {
-                        throw new RuntimeException(e);// TODO handle
+                        throw new InvalidParametersFormatException("Invalid JSON format");
                     }
                     actionEntity.setCampaign(campaignEntity);
                     return actionEntity;
                 })
-                .toList();
-    }
-
-    private Campaign isValidCampaign(String name, String description, List<ActionRequest> actions,
-            List<ConditionRequest> conditions) {
-        var actionList = getActionList(actions);
-        var conditionList = getConditionList(conditions);
-        return getCampaignObject(name, description, actionList, conditionList);
-    }
-
-    private List<Condition> getConditionList(List<ConditionRequest> conditions) {
-        return conditions.stream()
-                .map(conditionRequest -> conditionFactory.createCondition(conditionRequest.getType(),
-                        conditionRequest.getParameters()))
-                .toList();
-    }
-
-    private List<Action> getActionList(List<ActionRequest> actions) {
-        return actions.stream()
-                .map(actionRequest -> actionFactory.createAction(actionRequest.getType(),
-                        actionRequest.getParameters()))
                 .toList();
     }
 }
