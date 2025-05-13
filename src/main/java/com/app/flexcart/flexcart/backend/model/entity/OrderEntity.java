@@ -41,5 +41,5 @@ public class OrderEntity {
     @Column
     private LocalDateTime orderDate;
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OrderItem> orderItems;
+    private List<OrderItemEntity> orderItems;
 }

@@ -31,7 +31,7 @@ public class OrderService {
         var cart = cartService.getCart(userId);
         var campaign = campaignService.findBestCampaign(cart).orElseThrow();// TODO handle this exception
         var discount = campaign.calculateDiscount(cart);
-        var total = cart.getTotal().subtract(discount);
+        var total = cart.getTotal();
         var order = new OrderEntity();
 
         var campaignEntity = new CampaignEntity();

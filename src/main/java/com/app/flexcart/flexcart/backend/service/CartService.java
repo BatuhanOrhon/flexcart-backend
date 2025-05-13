@@ -1,7 +1,6 @@
 package com.app.flexcart.flexcart.backend.service;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
@@ -28,6 +27,8 @@ public class CartService {
 
     private final CartRepository cartRepository;
 
+    private final BigDecimal shippingFee = BigDecimal.valueOf(25);
+
     public void addCartItem(Long userId, Long productId, int quantity) {
         var user = userService.getUserEntityById(userId);
         var cart = user.getCart();
@@ -50,16 +51,22 @@ public class CartService {
             cart = new CartEntity();
             cart.setCartItems(new ArrayList<CartItemEntity>());
             cart.setUser(user);
-            cart.setCreatedAt(LocalDateTime.now());
-            cart.setShippingFee(BigDecimal.valueOf(25));
+            cart.setShippingFee(shippingFee);
         }
         return cart;
     }
 
     public Cart getCart(Long userId) {
-        var cartEntity = cartRepository.findByUser_UserId(userId).orElseThrow(() -> new CartNotFoundException("Cart not found for user with ID: " + userId));
+        var cartEntity = cartRepository.findByUser_UserId(userId)
+                .orElseThrow(() -> new CartNotFoundException("Cart not found for user with ID: " + userId));
         var cart = generateCart(cartEntity);
         return cart;
+    }
+
+    public CartEntity getCartEntity(Long userId) {
+        return cartRepository.findByUser_UserId(userId)
+                .orElseThrow(() -> new CartNotFoundException("Cart not found for user with ID: " + userId));
+
     }
 
     private CartItem convertCartItemEntityToDomain(CartItemEntity cartItemEntity) {
@@ -79,5 +86,12 @@ public class CartService {
         cart.setShippingFee(cartEntity.getShippingFee());
         cart.setUser(userService.getUserFromEntity(cartEntity.getUser()));
         return cart;
+    }
+
+    public void clearCart(Long userId) {
+        var cart = getCartEntity(userId);
+        cart.getCartItems().clear();
+        cart.setShippingFee(shippingFee);
+        cartRepository.save(cart);
     }
 }
