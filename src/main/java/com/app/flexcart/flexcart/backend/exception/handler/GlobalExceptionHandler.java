@@ -22,9 +22,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({
             ActionFactoryException.class,
             ConditionFactoryException.class,
-            InvalidParametersFormatException.class,
-            ActionFactoryParameterCannotBeNullException.class,
-            ConditionFactoryParameterCannotBeNullException.class
+            InvalidParametersFormatException.class
     })
     public ResponseEntity<ErrorResponse> handleBadRequest(RuntimeException ex) {
         ErrorResponse body = new ErrorResponse(
@@ -32,6 +30,19 @@ public class GlobalExceptionHandler {
                 HttpStatus.BAD_REQUEST.value());
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
+                .body(body);
+    }
+
+    @ExceptionHandler({
+            ActionFactoryParameterCannotBeNullException.class,
+            ConditionFactoryParameterCannotBeNullException.class
+    })
+    public ResponseEntity<ErrorResponse> handleUnprocessableEntity(RuntimeException ex) {
+        ErrorResponse body = new ErrorResponse(
+                ex.getMessage(),
+                HttpStatus.UNPROCESSABLE_ENTITY.value());
+        return ResponseEntity
+                .status(HttpStatus.UNPROCESSABLE_ENTITY)
                 .body(body);
     }
 

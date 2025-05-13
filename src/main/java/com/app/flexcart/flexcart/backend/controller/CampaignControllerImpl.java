@@ -9,6 +9,8 @@ import com.app.flexcart.flexcart.backend.controller.abstracts.ICampaignControlle
 import com.app.flexcart.flexcart.backend.controller.schema.PostCampaignRequest;
 import com.app.flexcart.flexcart.backend.controller.schema.subclasses.CampaignResponse;
 import com.app.flexcart.flexcart.backend.controller.util.CampaignResponseGenerator;
+import com.app.flexcart.flexcart.backend.exception.ActionFactoryException;
+import com.app.flexcart.flexcart.backend.exception.ConditionFactoryException;
 import com.app.flexcart.flexcart.backend.service.CampaignService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,7 +31,7 @@ public class CampaignControllerImpl implements ICampaignController {
     @Operation(summary = "Get all active campaigns", description = "Fetches a list of all active campaigns.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successfully retrieved the list of campaigns"),
-            @ApiResponse(responseCode = "500", description = "Internal server error"),
+            @ApiResponse(responseCode = "422", description = "Unprocessable entity"),
             @ApiResponse(responseCode = "204", description = "No active campaigns found")
     })
     @Override
@@ -45,22 +47,24 @@ public class CampaignControllerImpl implements ICampaignController {
     @Operation(summary = "Create a new campaign", description = "Creates a new campaign with the provided details.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Campaign created successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid input data"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
+            @ApiResponse(responseCode = "400", description = "Invalid input data")
     })
     @Override
     public ResponseEntity<String> createCampaign(PostCampaignRequest request) {
-        campaignService.saveCampaign(request.getName(), request.getDescription(),
-                request.getActions(),
-                request.getConditions(), request.getStartDate(), request.getEndDate(), request.getType());
+        try {
+            campaignService.saveCampaign(request.getName(), request.getDescription(),
+                    request.getActions(),
+                    request.getConditions(), request.getStartDate(), request.getEndDate(), request.getType());
+        } catch (ConditionFactoryException | ActionFactoryException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
         return ResponseEntity.created(null).body("Campaign is created successfully");
     }
 
     @Operation(summary = "Delete a campaign", description = "Deletes a campaign by its ID.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Campaign deleted successfully"),
-            @ApiResponse(responseCode = "404", description = "Campaign not found"),
-            @ApiResponse(responseCode = "500", description = "Internal server error")
+            @ApiResponse(responseCode = "404", description = "Campaign not found")
     })
     @Override
     public ResponseEntity<Void> deleteCampaign(Long id) {

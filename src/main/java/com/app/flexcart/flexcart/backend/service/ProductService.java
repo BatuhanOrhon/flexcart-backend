@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.app.flexcart.flexcart.backend.controller.schema.ProductResponse;
+import com.app.flexcart.flexcart.backend.exception.ProductNotFoundException;
 import com.app.flexcart.flexcart.backend.model.entity.CategoryEntity;
 import com.app.flexcart.flexcart.backend.model.entity.ProductEntity;
 import com.app.flexcart.flexcart.backend.model.repository.ProductRepository;
@@ -36,5 +37,10 @@ public class ProductService {
             response.setCategoryName(product.getCategory().getName());
             return response;
         }).toList();
+    }
+
+    public ProductEntity getProductById(Long id) {
+        return productRepository.findById(id)
+                .orElseThrow(() -> new ProductNotFoundException(String.format("Product not found with id %d", id)));
     }
 }

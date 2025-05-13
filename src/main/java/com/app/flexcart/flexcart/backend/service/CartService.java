@@ -13,9 +13,9 @@ import com.app.flexcart.flexcart.backend.domain.transaction.Cart;
 import com.app.flexcart.flexcart.backend.domain.transaction.CartItem;
 import com.app.flexcart.flexcart.backend.domain.transaction.Product;
 import com.app.flexcart.flexcart.backend.exception.CartNotFoundException;
+import com.app.flexcart.flexcart.backend.exception.UserNotFoundException;
 import com.app.flexcart.flexcart.backend.model.entity.CartEntity;
 import com.app.flexcart.flexcart.backend.model.entity.CartItemEntity;
-import com.app.flexcart.flexcart.backend.model.entity.ProductEntity;
 import com.app.flexcart.flexcart.backend.model.entity.UserEntity;
 import com.app.flexcart.flexcart.backend.model.repository.CartRepository;
 
@@ -33,6 +33,8 @@ public class CartService {
     private final CartItemResponseGenerator cartItemResponseGenerator;
 
     private final CampaignResponseGenerator campaignResponseGenerator;
+
+    private final ProductService productService;
 
     private final BigDecimal shippingFee = BigDecimal.valueOf(25);
 
@@ -71,6 +73,9 @@ public class CartService {
 
     public void addCartItem(Long userId, Long productId, int quantity) {
         var user = userService.getUserEntityById(userId);
+        if (user == null) {
+            throw new UserNotFoundException("User not found with ID: " + userId);
+        }
         var cart = user.getCart();
         cart = handleEmptyCart(cart, user);
         insertProductIntoCart(cart, productId, quantity);
@@ -83,8 +88,7 @@ public class CartService {
                 .findFirst();
         cartItem.ifPresentOrElse(item -> item.setQuantity(item.getQuantity() + quantity), () -> {
             var cartItemEntity = new CartItemEntity();
-            var productEntity = new ProductEntity();
-            productEntity.setId(productId);
+            var productEntity = productService.getProductById(productId);
             cartItemEntity.setProduct(productEntity);
             cartItemEntity.setQuantity(quantity);
             cartItemEntity.setCart(cart);
