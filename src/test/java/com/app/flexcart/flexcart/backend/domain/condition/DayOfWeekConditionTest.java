@@ -28,7 +28,7 @@ public class DayOfWeekConditionTest {
                 .with(TemporalAdjusters.next(DayOfWeek.MONDAY))
                 .getDayOfWeek();
         if (notToday == LocalDateTime.now().getDayOfWeek()) {
-            notToday = DayOfWeek.TUESDAY; // Fallback to ensure it's not today
+            notToday = DayOfWeek.TUESDAY; 
         }
 
         DayOfWeekCondition condition = new DayOfWeekCondition(notToday);

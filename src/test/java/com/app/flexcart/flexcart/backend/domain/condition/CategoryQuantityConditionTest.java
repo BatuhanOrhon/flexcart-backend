@@ -65,7 +65,7 @@ public class CategoryQuantityConditionTest {
         CategoryQuantityCondition condition = new CategoryQuantityCondition(categoryId, 3);
 
         Product mockProduct = mock(Product.class);
-        when(mockProduct.getCategoryId()).thenReturn(2); // Different category ID
+        when(mockProduct.getCategoryId()).thenReturn(2); 
 
         CartItem mockCartItem = mock(CartItem.class);
         when(mockCartItem.getProduct()).thenReturn(mockProduct);
