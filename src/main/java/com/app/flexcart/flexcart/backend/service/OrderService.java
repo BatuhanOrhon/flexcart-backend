@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.app.flexcart.flexcart.backend.controller.schema.OrderResponse;
 import com.app.flexcart.flexcart.backend.controller.util.OrderResponseGenerator;
+import com.app.flexcart.flexcart.backend.domain.campaign.Campaign;
 import com.app.flexcart.flexcart.backend.domain.transaction.CartItem;
 import com.app.flexcart.flexcart.backend.model.entity.CampaignEntity;
 import com.app.flexcart.flexcart.backend.model.entity.OrderEntity;
@@ -41,26 +42,34 @@ public class OrderService {
     @Transactional
     public void placeOrder(Long userId) {
         var cart = cartService.getCart(userId);
-        var campaign = campaignService.findBestCampaign(cart).orElseThrow();// TODO handle this exception
-        var discount = campaign.calculateDiscount(cart);
-        var total = cart.getTotal();
+        var campaigns = campaignService.applyBestCampaigns(cart);
         var order = new OrderEntity();
 
-        var campaignEntity = new CampaignEntity();
-        campaignEntity.setCampaignId(campaign.getId());
+        if (campaigns.isEmpty()) {
+            order.setAppliedCampaigns(null);
+        } else {
+            order.setAppliedCampaigns(campaigns.stream()
+                    .map(c -> getCampaignEntity(c))
+                    .toList());
+        }
 
-        order.setAppliedCampaign(campaignEntity);
-        order.setTotal(total);
-        order.setDiscount(discount);
+        order.setTotal(cart.getTotal());
+        order.setDiscount(cart.getCurrentDiscount());
         order.setOrderDate(LocalDateTime.now());
 
         var user = new UserEntity();
         user.setUserId(userId);
-
         order.setUser(user);
         order.setOrderItems(generateOrderItems(cart.getCartItems(), order));
+
         orderRepository.save(order);
         cartService.clearCart(userId);
+    }
+
+    private CampaignEntity getCampaignEntity(Campaign campaign) {
+        var campaignEntity = new CampaignEntity();
+        campaignEntity.setCampaignId(campaign.getId());
+        return campaignEntity;
     }
 
     private List<OrderItemEntity> generateOrderItems(List<CartItem> cartItems, OrderEntity order) {

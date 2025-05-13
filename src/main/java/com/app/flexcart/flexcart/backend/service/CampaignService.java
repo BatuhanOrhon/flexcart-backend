@@ -2,6 +2,7 @@ package com.app.flexcart.flexcart.backend.service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.app.flexcart.flexcart.backend.controller.schema.PostCampaignRequest.ActionRequest;
 import com.app.flexcart.flexcart.backend.controller.schema.PostCampaignRequest.ConditionRequest;
 import com.app.flexcart.flexcart.backend.domain.campaign.Campaign;
+import com.app.flexcart.flexcart.backend.domain.campaign.CampaignType;
 import com.app.flexcart.flexcart.backend.domain.transaction.Cart;
 import com.app.flexcart.flexcart.backend.model.repository.CampaignRepository;
 import com.app.flexcart.flexcart.backend.service.factory.CampaignEntityFactory;
@@ -26,10 +28,33 @@ public class CampaignService {
 
     private final CampaignFactory campaignFactory;
     private final CampaignRepository campaignRepository;
-    CampaignEntityFactory campaignEntityFactory;
+    private final CampaignEntityFactory campaignEntityFactory;
 
-    public Optional<Campaign> findBestCampaign(Cart cart) {
-        return getActiveCampaigns().stream().filter(c -> c.isApplicable(cart))
+    public List<Campaign> applyBestCampaigns(Cart cart) {
+
+        var activeCampaigns = getActiveCampaigns();
+
+        var bestPriceCampaign = getBestCampaign(cart, activeCampaigns, CampaignType.PRICE);
+
+        var campaignList = new ArrayList<Campaign>();
+
+        if (bestPriceCampaign.isPresent()) {
+            bestPriceCampaign.get().applyDiscount(cart);
+            campaignList.add(bestPriceCampaign.get());
+        }
+        var bestShippingCampaign = getBestCampaign(cart, activeCampaigns, CampaignType.SHIPPING);
+
+        if (bestShippingCampaign.isPresent()) {
+            bestShippingCampaign.get().applyDiscount(cart);
+            campaignList.add(bestShippingCampaign.get());
+
+        }
+        return campaignList;
+    }
+
+    private Optional<Campaign> getBestCampaign(Cart cart, List<Campaign> activeCampaigns, CampaignType type) {
+        return activeCampaigns.stream()
+                .filter(c -> (c.getType() == type && c.isApplicable(cart)))
                 .max(Comparator.comparing(c -> c.calculateDiscount(cart)))
                 .filter(c -> c.calculateDiscount(cart).compareTo(BigDecimal.ZERO) > 0);
     }
@@ -45,11 +70,11 @@ public class CampaignService {
 
     public void saveCampaign(String name, String description, List<ActionRequest> actions,
             List<ConditionRequest> conditions,
-            LocalDateTime startDate, LocalDateTime endDate) {
+            LocalDateTime startDate, LocalDateTime endDate, CampaignType type) {
         if (campaignFactory.isCampaignCreatable(name, description, actions, conditions)) {
             var campaignEntity = campaignEntityFactory.getCampaignEntity(name, description, actions, conditions,
                     startDate,
-                    endDate);
+                    endDate, type);
             campaignRepository.save(campaignEntity);
         }
     }

@@ -14,13 +14,14 @@ public class Cart {
     List<CartItem> cartItems;
     User user;
     BigDecimal shippingFee;
+    BigDecimal currentDiscount;
 
     public BigDecimal getTotal() {
         BigDecimal total = BigDecimal.ZERO;
         for (CartItem item : cartItems) {
             total = total.add(item.getSubTotalPrice());
         }
-        return total.add(shippingFee);
+        return total.add(shippingFee).subtract(currentDiscount);
     }
 
 }

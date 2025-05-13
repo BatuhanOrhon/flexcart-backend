@@ -17,6 +17,5 @@ public class GetCartResponse {
     private BigDecimal totalPrice;
     private BigDecimal discount;
     private List<CampaignResponse> campaigns;
-    private BigDecimal shippingFee;
 
 }

@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import com.app.flexcart.flexcart.backend.controller.schema.GetCartResponse;
 import com.app.flexcart.flexcart.backend.controller.util.CampaignResponseGenerator;
 import com.app.flexcart.flexcart.backend.controller.util.CartItemResponseGenerator;
-import com.app.flexcart.flexcart.backend.domain.campaign.Campaign;
 import com.app.flexcart.flexcart.backend.domain.transaction.Cart;
 import com.app.flexcart.flexcart.backend.domain.transaction.CartItem;
 import com.app.flexcart.flexcart.backend.domain.transaction.Product;
@@ -43,13 +42,8 @@ public class CartService {
         if (cart.getCartItems().isEmpty()) {
             return response;
         }
-        var campaign = campaignService.findBestCampaign(cart);
 
-        var campaignList = new ArrayList<Campaign>();
-
-        campaign.ifPresent(c -> {
-            campaignList.add(campaign.get());
-        });
+        var campaignList = campaignService.applyBestCampaigns(cart);
 
         response.setItems(cartItemResponseGenerator.generateCartItemResponseList(cart));
 
@@ -58,7 +52,6 @@ public class CartService {
                 .map((c) -> c.calculateDiscount(cart))
                 .reduce(BigDecimal.ZERO, BigDecimal::add));
         response.setTotalPrice(cart.getTotal());
-        response.setShippingFee(cart.getShippingFee());
         return response;
     }
 
@@ -139,6 +132,7 @@ public class CartService {
         cart.setCartItems(cartItems);
         cart.setShippingFee(cartEntity.getShippingFee());
         cart.setUser(userService.getUserFromEntity(cartEntity.getUser()));
+        cart.setCurrentDiscount(BigDecimal.ZERO);
         return cart;
     }
 

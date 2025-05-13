@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import com.app.flexcart.flexcart.backend.controller.schema.PostCampaignRequest.ActionRequest;
 import com.app.flexcart.flexcart.backend.controller.schema.PostCampaignRequest.ConditionRequest;
+import com.app.flexcart.flexcart.backend.domain.campaign.CampaignType;
 import com.app.flexcart.flexcart.backend.exception.InvalidParametersFormatException;
 import com.app.flexcart.flexcart.backend.model.entity.CampaignActionEntity;
 import com.app.flexcart.flexcart.backend.model.entity.CampaignConditionEntity;
@@ -24,7 +25,7 @@ public class CampaignEntityFactory {
 
     public CampaignEntity getCampaignEntity(String name, String description,
             List<ActionRequest> actions,
-            List<ConditionRequest> conditions, LocalDateTime startDate, LocalDateTime endDate) {
+            List<ConditionRequest> conditions, LocalDateTime startDate, LocalDateTime endDate, CampaignType type) {
         var campaignEntity = new CampaignEntity();
         campaignEntity.setName(name);
         campaignEntity.setDescription(description);
@@ -32,6 +33,7 @@ public class CampaignEntityFactory {
         campaignEntity.setEndDate(endDate);
         campaignEntity.setActions(generateActionEntities(actions, campaignEntity));
         campaignEntity.setConditions(generateConditionEntities(conditions, campaignEntity));
+        campaignEntity.setType(type);
         return campaignEntity;
     }
 

@@ -12,6 +12,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -31,9 +33,9 @@ public class OrderEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "campaign_id")
-    private CampaignEntity appliedCampaign;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "order_campaign", joinColumns = @JoinColumn(name = "id"), inverseJoinColumns = @JoinColumn(name = "campaign_id"))
+    private List<CampaignEntity> appliedCampaigns;
     @Column
     private BigDecimal total;
     @Column
