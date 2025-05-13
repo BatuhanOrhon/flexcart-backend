@@ -1,5 +1,7 @@
 package com.app.flexcart.flexcart.backend.controller.abstracts;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -9,8 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.app.flexcart.flexcart.backend.controller.schema.GetCartResponse;
 import com.app.flexcart.flexcart.backend.controller.schema.PostCartItemRequest;
+import com.app.flexcart.flexcart.backend.controller.schema.subclasses.CampaignResponse;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 
 @RequestMapping("/api")
 public interface ICartController {
@@ -19,5 +23,5 @@ public interface ICartController {
             @PathVariable Long userId);
 
     @GetMapping("/cart/{userId}")
-    public ResponseEntity<GetCartResponse> getCart(@PathVariable Long userId);
+    public ResponseEntity<GetCartResponse> getCart(@NotNull @PathVariable Long userId);
 }

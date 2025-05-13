@@ -33,7 +33,10 @@ public class CartControllerImpl implements ICartController {
     @Override
     public ResponseEntity<GetCartResponse> getCart(Long userId) {
         var cart = cartService.getCart(userId);
-        var campaign = campaignService.findBestCampaign(cart).orElseThrow();
+        if (cart.getCartItems().isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        var campaign = campaignService.findBestCampaign(cart).orElseThrow();// TODO handle this exception
         GetCartResponse response = new GetCartResponse();
         response.setItems(cartItemResponseGenerator.generateCartItemResponseList(cart));
         var campaignList = new ArrayList<Campaign>();
