@@ -21,7 +21,11 @@ public class Cart {
         for (CartItem item : cartItems) {
             total = total.add(item.getSubTotalPrice());
         }
-        return total.add(shippingFee).subtract(currentDiscount);
+        if (total.add(shippingFee).subtract(currentDiscount).compareTo(BigDecimal.ZERO) > 0) {
+            return total.add(shippingFee).subtract(currentDiscount);
+        }
+        return BigDecimal.ZERO;
+
     }
 
 }
