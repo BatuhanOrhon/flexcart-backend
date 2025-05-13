@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
+import com.app.flexcart.flexcart.backend.domain.campaign.CampaignType;
 import com.app.flexcart.flexcart.backend.domain.campaign.action.ActionType;
 import com.app.flexcart.flexcart.backend.domain.campaign.condition.ConditionType;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -36,6 +37,8 @@ public class PostCampaignRequest {
     @NotNull
     @NotEmpty
     private List<ConditionRequest> conditions;
+    @NotNull
+    private CampaignType type;
 
     @Getter
     @Setter

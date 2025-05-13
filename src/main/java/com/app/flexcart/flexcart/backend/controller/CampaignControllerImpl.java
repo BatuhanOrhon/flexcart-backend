@@ -32,7 +32,7 @@ public class CampaignControllerImpl implements ICampaignController {
     public ResponseEntity<String> createCampaign(PostCampaignRequest request) {
         campaignService.saveCampaign(request.getName(), request.getDescription(),
                 request.getActions(),
-                request.getConditions(), request.getStartDate(), request.getEndDate());
+                request.getConditions(), request.getStartDate(), request.getEndDate(), request.getType());
         return ResponseEntity.created(null).body("Campaign is created successfully");
     }
 

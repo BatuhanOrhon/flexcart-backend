@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import com.app.flexcart.flexcart.backend.controller.schema.PostCampaignRequest.ActionRequest;
 import com.app.flexcart.flexcart.backend.controller.schema.PostCampaignRequest.ConditionRequest;
 import com.app.flexcart.flexcart.backend.domain.campaign.Campaign;
+import com.app.flexcart.flexcart.backend.domain.campaign.CampaignType;
 import com.app.flexcart.flexcart.backend.domain.campaign.action.Action;
 import com.app.flexcart.flexcart.backend.domain.campaign.action.ActionType;
 import com.app.flexcart.flexcart.backend.domain.campaign.condition.Condition;
@@ -33,14 +34,14 @@ public class CampaignFactory {
             List<ConditionRequest> conditionReqs) {
         var actions = actionFactory.getActionList(actionReqs);
         var conditions = conditionFactory.getConditionList(conditionReqs);
-        getCampaignObject(0L, name, description, actions, conditions, LocalDateTime.now(),
+        generateDummyCampaignObject(0L, name, description, actions, conditions, LocalDateTime.now(),
                 LocalDateTime.now().plusDays(1));
         return true;
     }
 
-    public Campaign getCampaignObject(long id, String name, String description, List<Action> actions,
+    public Campaign generateDummyCampaignObject(long id, String name, String description, List<Action> actions,
             List<Condition> conditions, LocalDateTime startDate, LocalDateTime endDate) {
-        return new Campaign(id, name, description, conditions, actions, startDate, endDate);
+        return new Campaign(id, name, description, conditions, actions, startDate, endDate, CampaignType.PRICE);
     }
 
     public Campaign getCampaignObject(CampaignEntity campaignEntity) {
@@ -48,7 +49,8 @@ public class CampaignFactory {
         var conditions = getConditions(campaignEntity);
         return new Campaign(campaignEntity.getCampaignId(), campaignEntity.getName(),
                 campaignEntity.getDescription(),
-                conditions, actions, campaignEntity.getStartDate(), campaignEntity.getEndDate());
+                conditions, actions, campaignEntity.getStartDate(), campaignEntity.getEndDate(),
+                campaignEntity.getType());
     }
 
     private List<Condition> getConditions(CampaignEntity campaignEntity) {

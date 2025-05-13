@@ -23,6 +23,13 @@ public class Campaign {
     private List<Action> actions;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
+    private CampaignType type;
+
+    public void applyDiscount(Cart cart) {
+        cart.setCurrentDiscount(cart.getCurrentDiscount().add(actions.stream()
+                .map(a -> a.apply(cart))
+                .reduce(BigDecimal.ZERO, BigDecimal::add)));
+    }
 
     public BigDecimal calculateDiscount(Cart cart) {
         return actions.stream()
