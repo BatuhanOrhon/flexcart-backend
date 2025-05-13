@@ -22,4 +22,7 @@ public class ProductResponse {
 
     @Schema(description = "Name of the product", example = "Wireless Mouse", required = true)
     private String name;
+
+    @Schema(description = "Category ID of the product", example = "1", required = true)
+    private long categoryId;
 }

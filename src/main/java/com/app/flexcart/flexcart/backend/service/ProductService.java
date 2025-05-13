@@ -35,6 +35,7 @@ public class ProductService {
             response.setName(product.getProductName());
             response.setPrice(product.getPrice());
             response.setCategoryName(product.getCategory().getName());
+            response.setCategoryId(product.getCategory().getId());
             return response;
         }).toList();
     }
