@@ -9,7 +9,6 @@ import com.app.flexcart.flexcart.backend.controller.abstracts.ICampaignControlle
 import com.app.flexcart.flexcart.backend.controller.schema.PostCampaignRequest;
 import com.app.flexcart.flexcart.backend.controller.schema.subclasses.CampaignResponse;
 import com.app.flexcart.flexcart.backend.controller.util.CampaignResponseGenerator;
-import com.app.flexcart.flexcart.backend.domain.campaign.Campaign;
 import com.app.flexcart.flexcart.backend.service.CampaignService;
 
 import lombok.RequiredArgsConstructor;
@@ -38,15 +37,9 @@ public class CampaignControllerImpl implements ICampaignController {
     }
 
     @Override
-    public ResponseEntity<Campaign> updateCampaign(Long id, Campaign campaign) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateCampaign'");
-    }
-
-    @Override
     public ResponseEntity<Void> deleteCampaign(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'deleteCampaign'");
+        campaignService.deleteCampaign(id);
+        return ResponseEntity.noContent().build();
     }
 
 }

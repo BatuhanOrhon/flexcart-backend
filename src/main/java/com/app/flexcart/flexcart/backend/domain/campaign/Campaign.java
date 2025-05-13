@@ -1,6 +1,7 @@
 package com.app.flexcart.flexcart.backend.domain.campaign;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import com.app.flexcart.flexcart.backend.domain.campaign.action.Action;
@@ -20,6 +21,8 @@ public class Campaign {
     private String description;
     private List<Condition> conditions;
     private List<Action> actions;
+    private LocalDateTime startDate;
+    private LocalDateTime endDate;
 
     public BigDecimal calculateDiscount(Cart cart) {
         return actions.stream()

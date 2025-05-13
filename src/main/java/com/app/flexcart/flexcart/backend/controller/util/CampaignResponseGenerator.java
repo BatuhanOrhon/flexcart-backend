@@ -12,7 +12,8 @@ import com.app.flexcart.flexcart.backend.domain.campaign.Campaign;
 public class CampaignResponseGenerator {
     public List<CampaignResponse> generateCampaignResponseList(List<Campaign> campaign) {
         return campaign.stream()
-                .map(c -> new CampaignResponse(c.getName(), c.getDescription()))
+                .map(c -> new CampaignResponse(c.getId(), c.getName(), c.getDescription(), c.getStartDate(),
+                        c.getEndDate()))
                 .collect(Collectors.toList());
     }
 }
