@@ -49,12 +49,13 @@ public class UserService {
                 .isAfter(LocalDateTime.now().minusMonths(1));
     }
 
-    public void saveUser(String name, String surname) {
+    public Long saveUser(String name, String surname) {
         var user = new UserEntity();
         user.setName(name);
         user.setSurname(surname);
         user.setRegisterDate(LocalDateTime.now());
-        userRepository.save(user);
+        var savedUser = userRepository.save(user);
+        return savedUser.getUserId();
     }
 
     public UserEntity getUserEntityById(Long userId) {

@@ -26,8 +26,8 @@ public class UserControllerImpl implements IUserController {
             @ApiResponse(responseCode = "400", description = "Invalid input data")
     })
     public ResponseEntity<String> createUser(PostUserRequest user) {
-        userService.saveUser(user.getName(), user.getSurname());
-        return ResponseEntity.ok("User is created successfully");
+        Long userId = userService.saveUser(user.getName(), user.getSurname());
+        return ResponseEntity.ok("User is created successfully with ID: " + userId);
     }
 
 }
