@@ -1,10 +1,13 @@
 package com.app.flexcart.flexcart.backend.controller;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.app.flexcart.flexcart.backend.controller.abstracts.IUserController;
 import com.app.flexcart.flexcart.backend.controller.schema.PostUserRequest;
+import com.app.flexcart.flexcart.backend.controller.schema.UserResponse;
 import com.app.flexcart.flexcart.backend.service.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,8 +29,22 @@ public class UserControllerImpl implements IUserController {
             @ApiResponse(responseCode = "400", description = "Invalid input data")
     })
     public ResponseEntity<String> createUser(PostUserRequest user) {
-        userService.saveUser(user.getName(), user.getSurname());
-        return ResponseEntity.ok("User is created successfully");
+        Long userId = userService.saveUser(user.getName(), user.getSurname());
+        return ResponseEntity.ok("User is created successfully with ID: " + userId);
+    }
+
+    @Override
+    @Operation(summary = "Get all users", description = "Fetches a list of all registered users.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Users retrieved successfully"),
+            @ApiResponse(responseCode = "204", description = "No users found")
+    })
+    public ResponseEntity<List<UserResponse>> getAllUsers() {
+        var list = userService.getAllUsers();
+        if (list.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(list);
     }
 
 }

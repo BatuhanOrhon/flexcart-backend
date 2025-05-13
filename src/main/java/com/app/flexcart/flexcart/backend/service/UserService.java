@@ -2,9 +2,11 @@ package com.app.flexcart.flexcart.backend.service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.app.flexcart.flexcart.backend.controller.schema.UserResponse;
 import com.app.flexcart.flexcart.backend.domain.user.User;
 import com.app.flexcart.flexcart.backend.domain.user.UserType;
 import com.app.flexcart.flexcart.backend.exception.UserNotFoundException;
@@ -49,12 +51,13 @@ public class UserService {
                 .isAfter(LocalDateTime.now().minusMonths(1));
     }
 
-    public void saveUser(String name, String surname) {
+    public Long saveUser(String name, String surname) {
         var user = new UserEntity();
         user.setName(name);
         user.setSurname(surname);
         user.setRegisterDate(LocalDateTime.now());
-        userRepository.save(user);
+        var savedUser = userRepository.save(user);
+        return savedUser.getUserId();
     }
 
     public UserEntity getUserEntityById(Long userId) {
@@ -73,5 +76,16 @@ public class UserService {
 
     public long getOrderCountByUserId(Long userId) {
         return orderRepository.countByUser_UserId(userId);
+    }
+
+    public List<UserResponse> getAllUsers() {
+        return userRepository.findAll().stream().map(user -> {
+            var response = new UserResponse();
+            response.setId(user.getUserId());
+            response.setName(user.getName());
+            response.setSurname(user.getSurname());
+            response.setRegisterDate(user.getRegisterDate());
+            return response;
+        }).toList();
     }
 }
