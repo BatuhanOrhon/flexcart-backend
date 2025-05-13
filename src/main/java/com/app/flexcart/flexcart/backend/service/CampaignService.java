@@ -15,12 +15,10 @@ import com.app.flexcart.flexcart.backend.domain.campaign.action.ActionType;
 import com.app.flexcart.flexcart.backend.domain.campaign.condition.Condition;
 import com.app.flexcart.flexcart.backend.domain.campaign.condition.ConditionType;
 import com.app.flexcart.flexcart.backend.domain.transaction.Cart;
-import com.app.flexcart.flexcart.backend.exception.InvalidParametersFormatException;
-import com.app.flexcart.flexcart.backend.model.entity.CampaignActionEntity;
-import com.app.flexcart.flexcart.backend.model.entity.CampaignConditionEntity;
 import com.app.flexcart.flexcart.backend.model.entity.CampaignEntity;
 import com.app.flexcart.flexcart.backend.model.repository.CampaignRepository;
 import com.app.flexcart.flexcart.backend.service.factory.ActionFactory;
+import com.app.flexcart.flexcart.backend.service.factory.CampaignEntityFactory;
 import com.app.flexcart.flexcart.backend.service.factory.CampaignFactory;
 import com.app.flexcart.flexcart.backend.service.factory.ConditionFactory;
 import com.app.flexcart.flexcart.backend.util.ParameterParser;
@@ -39,6 +37,7 @@ public class CampaignService {
     private final CampaignFactory campaignFactory;
     private final CampaignRepository campaignRepository;
     private final ParameterParser parameterParser;
+    CampaignEntityFactory campaignEntityFactory;
 
     // TODO add free shipping logic
     public Optional<Campaign> findBestCampaign(Cart cart) {
@@ -53,7 +52,8 @@ public class CampaignService {
                     var actions = getActions(campaignEntity);
 
                     var conditions = getConditions(campaignEntity);
-                    return campaignFactory.getCampaignObject(campaignEntity.getName(), campaignEntity.getDescription(),
+                    return campaignFactory.getCampaignObject(campaignEntity.getCampaignId(), campaignEntity.getName(),
+                            campaignEntity.getDescription(),
                             actions,
                             conditions);
                 })
@@ -97,52 +97,14 @@ public class CampaignService {
             List<ConditionRequest> conditions,
             LocalDateTime startDate, LocalDateTime endDate) {
 
-        // TODO Might be a better logic
-        campaignFactory.createCampaign(name, description, actions, conditions);
-        var campaignEntity = new CampaignEntity();
-        campaignEntity.setName(name);
-        campaignEntity.setDescription(description);
-        campaignEntity.setStartDate(startDate);
-        campaignEntity.setEndDate(endDate);
-
-        campaignEntity.setActions(generateActionEntities(actions, campaignEntity));
-        campaignEntity.setConditions(generateConditionEntities(conditions, campaignEntity));
-
-        campaignRepository.save(campaignEntity);
+        if (campaignFactory.isCampaignCreatable(name, description, actions, conditions)) {
+            var campaignEntity = campaignEntityFactory.getCampaignEntity(name, description, actions, conditions,
+                    startDate,
+                    endDate);
+            campaignRepository.save(campaignEntity);
+        } else {
+            throw new IllegalArgumentException("Campaign is not creatable");
+        }
     }
 
-    private List<CampaignConditionEntity> generateConditionEntities(List<ConditionRequest> conditions,
-            CampaignEntity campaignEntity) {
-        return conditions.stream()
-                .map(conditionRequest -> {
-                    var conditionEntity = new CampaignConditionEntity();
-                    conditionEntity.setType(conditionRequest.getType().name());
-                    try {
-                        conditionEntity
-                                .setParams(parameterParser.convertToJsonString(conditionRequest.getParameters()));
-                    } catch (JsonProcessingException e) {
-                        throw new InvalidParametersFormatException("Invalid JSON format");
-                    }
-                    conditionEntity.setCampaign(campaignEntity);
-                    return conditionEntity;
-                })
-                .toList();
-    }
-
-    private List<CampaignActionEntity> generateActionEntities(List<ActionRequest> actions,
-            CampaignEntity campaignEntity) {
-        return actions.stream()
-                .map(actionRequest -> {
-                    var actionEntity = new CampaignActionEntity();
-                    actionEntity.setType(actionRequest.getType().name());
-                    try {
-                        actionEntity.setParams(parameterParser.convertToJsonString(actionRequest.getParameters()));
-                    } catch (JsonProcessingException e) {
-                        throw new InvalidParametersFormatException("Invalid JSON format");
-                    }
-                    actionEntity.setCampaign(campaignEntity);
-                    return actionEntity;
-                })
-                .toList();
-    }
 }

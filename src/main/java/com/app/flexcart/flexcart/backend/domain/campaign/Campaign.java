@@ -15,6 +15,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class Campaign {
+    private Long id;
     private String name;
     private String description;
     private List<Condition> conditions;

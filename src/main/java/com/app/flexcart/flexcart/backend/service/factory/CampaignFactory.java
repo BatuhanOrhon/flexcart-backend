@@ -18,19 +18,28 @@ public class CampaignFactory {
     private final ActionFactory actionFactory;
     private final ConditionFactory conditionFactory;
 
-    public Campaign createCampaign(String name,
-                                   String description,
-                                   List<ActionRequest>  actionReqs,
-                                   List<ConditionRequest> conditionReqs) {
-        var actions    = actionFactory.getActionList(actionReqs);
+    public Campaign createCampaign(long id, String name,
+            String description,
+            List<ActionRequest> actionReqs,
+            List<ConditionRequest> conditionReqs) {
+        var actions = actionFactory.getActionList(actionReqs);
         var conditions = conditionFactory.getConditionList(conditionReqs);
-        return getCampaignObject(name, description, actions, conditions);
+        return getCampaignObject(id, name, description, actions, conditions);
     }
 
-    
-    public Campaign getCampaignObject(String name, String description, List<Action> actions,
+    public Boolean isCampaignCreatable(String name,
+            String description,
+            List<ActionRequest> actionReqs,
+            List<ConditionRequest> conditionReqs) {
+        var actions = actionFactory.getActionList(actionReqs);
+        var conditions = conditionFactory.getConditionList(conditionReqs);
+        getCampaignObject(0L, name, description, actions, conditions);
+        return true;
+    }
+
+    public Campaign getCampaignObject(long id, String name, String description, List<Action> actions,
             List<Condition> conditions) {
-        return new Campaign(name, description, conditions, actions);
+        return new Campaign(id, name, description, conditions, actions);
     }
 
 }
