@@ -96,14 +96,11 @@ public class CampaignService {
     public void saveCampaign(String name, String description, List<ActionRequest> actions,
             List<ConditionRequest> conditions,
             LocalDateTime startDate, LocalDateTime endDate) {
-
         if (campaignFactory.isCampaignCreatable(name, description, actions, conditions)) {
             var campaignEntity = campaignEntityFactory.getCampaignEntity(name, description, actions, conditions,
                     startDate,
                     endDate);
             campaignRepository.save(campaignEntity);
-        } else {
-            throw new IllegalArgumentException("Campaign is not creatable");
         }
     }
 
