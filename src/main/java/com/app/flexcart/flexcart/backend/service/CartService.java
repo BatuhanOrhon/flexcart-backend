@@ -47,18 +47,19 @@ public class CartService {
         var user = userService.getUserEntityById(userId);
         var cart = user.getCart();
         cart = handleEmptyCart(cart, user);
-        var product = productService.getProductEntityById(productId);
-        insertProductIntoCart(cart, product, quantity);
+        insertProductIntoCart(cart, productId, quantity);
         cartRepository.save(cart);
     }
 
-    private void insertProductIntoCart(CartEntity cart, ProductEntity product, int quantity) {
+    private void insertProductIntoCart(CartEntity cart, Long productId, int quantity) {
         var cartItem = cart.getCartItems().stream()
-                .filter(item -> item.getProduct().getId().equals(product.getId()))
+                .filter(item -> item.getProduct().getId().equals(productId))
                 .findFirst();
         cartItem.ifPresentOrElse(item -> item.setQuantity(item.getQuantity() + quantity), () -> {
             var cartItemEntity = new CartItemEntity();
-            cartItemEntity.setProduct(product);
+            var productEntity = new ProductEntity();
+            productEntity.setId(productId);
+            cartItemEntity.setProduct(productEntity);
             cartItemEntity.setQuantity(quantity);
             cartItemEntity.setCart(cart);
             cart.getCartItems().add(cartItemEntity);
