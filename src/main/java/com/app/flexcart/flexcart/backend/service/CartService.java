@@ -6,6 +6,10 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.app.flexcart.flexcart.backend.controller.schema.GetCartResponse;
+import com.app.flexcart.flexcart.backend.controller.util.CampaignResponseGenerator;
+import com.app.flexcart.flexcart.backend.controller.util.CartItemResponseGenerator;
+import com.app.flexcart.flexcart.backend.domain.campaign.Campaign;
 import com.app.flexcart.flexcart.backend.domain.transaction.Cart;
 import com.app.flexcart.flexcart.backend.domain.transaction.CartItem;
 import com.app.flexcart.flexcart.backend.domain.transaction.Product;
@@ -23,11 +27,40 @@ import lombok.RequiredArgsConstructor;
 public class CartService {
     private final UserService userService;
 
-    private final ProductService productService;
-
     private final CartRepository cartRepository;
 
+    private final CampaignService campaignService;
+
+    private final CartItemResponseGenerator cartItemResponseGenerator;
+
+    private final CampaignResponseGenerator campaignResponseGenerator;
+
     private final BigDecimal shippingFee = BigDecimal.valueOf(25);
+
+    public GetCartResponse getCartResponse(Long userId) {
+        GetCartResponse response = new GetCartResponse();
+        var cart = getCart(userId);
+        if (cart.getCartItems().isEmpty()) {
+            return response;
+        }
+        var campaign = campaignService.findBestCampaign(cart);
+
+        var campaignList = new ArrayList<Campaign>();
+
+        campaign.ifPresent(c -> {
+            campaignList.add(campaign.get());
+        });
+
+        response.setItems(cartItemResponseGenerator.generateCartItemResponseList(cart));
+
+        response.setCampaigns(campaignResponseGenerator.generateCampaignResponseList(campaignList));
+        response.setDiscount(campaignList.stream()
+                .map((c) -> c.calculateDiscount(cart))
+                .reduce(BigDecimal.ZERO, BigDecimal::add));
+        response.setTotalPrice(cart.getTotal());
+        response.setShippingFee(cart.getShippingFee());
+        return response;
+    }
 
     public void removeFromCart(Long userId, Long productId, int quantity) {
         var cart = getCartEntity(userId);

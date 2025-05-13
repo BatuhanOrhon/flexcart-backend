@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.app.flexcart.flexcart.backend.controller.abstracts.IOrderController;
 import com.app.flexcart.flexcart.backend.controller.schema.OrderResponse;
-import com.app.flexcart.flexcart.backend.controller.util.OrderResponseGenerator;
 import com.app.flexcart.flexcart.backend.service.OrderService;
 
 import jakarta.validation.constraints.NotNull;
@@ -17,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 @RestController
 public class OrderControllerImpl implements IOrderController {
     private final OrderService orderService;
-    private final OrderResponseGenerator orderResponseGenerator;
 
     @Override
     public ResponseEntity<String> placeOrder(@NotNull Long userId) {
@@ -27,9 +25,7 @@ public class OrderControllerImpl implements IOrderController {
 
     @Override
     public ResponseEntity<List<OrderResponse>> getOrders(@NotNull Long userId) {
-        var orders = orderService.getOrders(userId);
-        var response = orderResponseGenerator.generateOrderResponseList(orders);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(orderService.getOrdersResponse(userId));
 
     }
 }

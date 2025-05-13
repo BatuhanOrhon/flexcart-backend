@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.app.flexcart.flexcart.backend.controller.schema.OrderResponse;
+import com.app.flexcart.flexcart.backend.controller.util.OrderResponseGenerator;
 import com.app.flexcart.flexcart.backend.domain.transaction.CartItem;
 import com.app.flexcart.flexcart.backend.model.entity.CampaignEntity;
 import com.app.flexcart.flexcart.backend.model.entity.OrderEntity;
@@ -25,6 +27,12 @@ public class OrderService {
     private final CartService cartService;
 
     private final CampaignService campaignService;
+
+    private final OrderResponseGenerator orderResponseGenerator;
+
+    public List<OrderResponse> getOrdersResponse(Long userId) {
+        return orderResponseGenerator.generateOrderResponseList(getOrders(userId));
+    }
 
     public List<OrderEntity> getOrders(Long userId) {
         return orderRepository.findByUser_UserId(userId);
