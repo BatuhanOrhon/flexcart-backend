@@ -10,6 +10,7 @@ import com.app.flexcart.flexcart.backend.controller.schema.PostCampaignRequest.A
 import com.app.flexcart.flexcart.backend.domain.campaign.action.Action;
 import com.app.flexcart.flexcart.backend.domain.campaign.action.ActionType;
 import com.app.flexcart.flexcart.backend.domain.campaign.action.FixedAmountAction;
+import com.app.flexcart.flexcart.backend.domain.campaign.action.FixedAmountOnCategoryAction;
 import com.app.flexcart.flexcart.backend.domain.campaign.action.FreeShippingAction;
 import com.app.flexcart.flexcart.backend.domain.campaign.action.FreeUnitsOnCategoryAction;
 import com.app.flexcart.flexcart.backend.domain.campaign.action.PercentageOnCategoryAction;
@@ -89,6 +90,20 @@ public class ActionFactory {
                 return new PercentageOnTotalAction(BigDecimal.valueOf((Double) percentTotal));
             case FREE_SHIPPING:
                 return new FreeShippingAction();
+
+            case FIXED_AMOUNT_ON_CATEGORY:
+                var amountOnCategory = params.get("amount");
+                var categoryIdOnCategory = params.get("categoryId");
+                if (amountOnCategory == null) {
+                    throw new ActionFactoryParameterCannotBeNullException(
+                            "Amount cannot be null for FIXED_AMOUNT_ON_CATEGORY action");
+                }
+                if (categoryIdOnCategory == null) {
+                    throw new ActionFactoryParameterCannotBeNullException(
+                            "Category ID cannot be null for FIXED_AMOUNT_ON_CATEGORY action");
+                }
+                return new FixedAmountOnCategoryAction((Integer) categoryIdOnCategory,
+                        BigDecimal.valueOf((Integer) categoryIdOnCategory));
             default:
                 throw new ActionFactoryException("Unknown action type: " + actionType);
         }
