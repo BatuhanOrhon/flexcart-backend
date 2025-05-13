@@ -64,4 +64,10 @@ public class CartControllerImpl implements ICartController {
         return ResponseEntity.ok("Item is removed from cart successfully");
     }
 
+    @Override
+    public ResponseEntity<?> emptyCart(Long userId) {
+        cartService.clearCart(userId);
+        return ResponseEntity.ok("Cart is cleared successfully");
+    }
+
 }

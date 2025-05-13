@@ -17,16 +17,20 @@ import jakarta.validation.constraints.NotNull;
 
 @RequestMapping("/api")
 public interface ICartController {
-    @PostMapping("/cart/{userId}/item")
-    public ResponseEntity<String> addCartItem(@Valid @RequestBody PostCartItemRequest cartRequest,
-            @PathVariable Long userId);
+        @PostMapping("/cart/{userId}/item")
+        public ResponseEntity<String> addCartItem(@Valid @RequestBody PostCartItemRequest cartRequest,
+                        @PathVariable Long userId);
 
-    @GetMapping("/cart/{userId}")
-    public ResponseEntity<GetCartResponse> getCart(@NotNull @PathVariable Long userId);
+        @GetMapping("/cart/{userId}")
+        public ResponseEntity<GetCartResponse> getCart(@NotNull @PathVariable Long userId);
 
-    @DeleteMapping("/cart/{userId}/item/{itemId}")
-    public ResponseEntity<?> removeFromCart(
-            @PathVariable Long userId,
-            @PathVariable Long itemId,
-            @NotNull @RequestParam int quantity);
+        @DeleteMapping("/cart/{userId}/item/{itemId}")
+        public ResponseEntity<?> removeFromCart(
+                        @PathVariable Long userId,
+                        @PathVariable Long itemId,
+                        @NotNull @RequestParam int quantity);
+
+        @DeleteMapping("/cart/{userId}")
+        public ResponseEntity<?> emptyCart(
+                        @PathVariable Long userId);
 }
