@@ -39,11 +39,17 @@ public class CartService {
     }
 
     private void insertProductIntoCart(CartEntity cart, ProductEntity product, int quantity) {
-        var cartItem = new CartItemEntity();
-        cartItem.setCart(cart);
-        cartItem.setProduct(product);
-        cartItem.setQuantity(quantity);
-        cart.getCartItems().add(cartItem);
+        var cartItem = cart.getCartItems().stream()
+                .filter(item -> item.getProduct().getId().equals(product.getId()))
+                .findFirst();
+        cartItem.ifPresentOrElse(item -> item.setQuantity(item.getQuantity() + quantity), () -> {
+            var cartItemEntity = new CartItemEntity();
+            cartItemEntity.setProduct(product);
+            cartItemEntity.setQuantity(quantity);
+            cartItemEntity.setCart(cart);
+            cart.getCartItems().add(cartItemEntity);
+        });
+
     }
 
     private CartEntity handleEmptyCart(CartEntity cart, UserEntity user) {
