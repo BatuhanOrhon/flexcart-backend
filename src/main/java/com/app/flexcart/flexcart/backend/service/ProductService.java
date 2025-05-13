@@ -1,9 +1,11 @@
 package com.app.flexcart.flexcart.backend.service;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.app.flexcart.flexcart.backend.controller.schema.ProductResponse;
 import com.app.flexcart.flexcart.backend.model.entity.CategoryEntity;
 import com.app.flexcart.flexcart.backend.model.entity.ProductEntity;
 import com.app.flexcart.flexcart.backend.model.repository.ProductRepository;
@@ -23,5 +25,16 @@ public class ProductService {
         category.setId(categoryId);
         entity.setCategory(category);
         productRepository.save(entity);
+    }
+
+    public List<ProductResponse> getAllProducts() {
+        return productRepository.findAll().stream().map(product -> {
+            var response = new ProductResponse();
+            response.setId(product.getId());
+            response.setName(product.getProductName());
+            response.setPrice(product.getPrice());
+            response.setCategoryName(product.getCategory().getName());
+            return response;
+        }).toList();
     }
 }
