@@ -33,7 +33,7 @@ public class OrderEntity {
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "order_campaign", joinColumns = @JoinColumn(name = "id"), inverseJoinColumns = @JoinColumn(name = "campaign_id"))
     private List<CampaignEntity> appliedCampaigns;
     @Column
