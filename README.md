@@ -28,19 +28,21 @@ A campaign consists of the following components:
 
 Conditions are rules that must be satisfied for a campaign to be applied. Each condition implements the `Condition` interface:
 
-````java
+```java
 public interface Condition {
     boolean isSatisfiedBy(Cart cart);
 }
+```
 
 ### 2. **Actions**
+
 Actions define the benefits or discounts provided by the campaign. Each action implements the `Action` interface:
 
 ```java
 public interface Action {
     BigDecimal apply(Cart cart);
 }
-````
+```
 
 #### Examples:
 
