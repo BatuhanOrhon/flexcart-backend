@@ -1,10 +1,14 @@
 package com.app.flexcart.flexcart.backend.controller;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.app.flexcart.flexcart.backend.controller.abstracts.ICampaignController;
 import com.app.flexcart.flexcart.backend.controller.schema.PostCampaignRequest;
+import com.app.flexcart.flexcart.backend.controller.schema.subclasses.CampaignResponse;
+import com.app.flexcart.flexcart.backend.controller.util.CampaignResponseGenerator;
 import com.app.flexcart.flexcart.backend.domain.campaign.Campaign;
 import com.app.flexcart.flexcart.backend.service.CampaignService;
 
@@ -16,10 +20,13 @@ public class CampaignControllerImpl implements ICampaignController {
 
     private final CampaignService campaignService;
 
+    private final CampaignResponseGenerator campaignResponseGenerator;
+
     @Override
-    public ResponseEntity<String> getAllCampaigns() {
-        var campaigns = campaignService.getActiveCampaigns();
-        return ResponseEntity.ok("Campaigns are fetched successfully");
+    public ResponseEntity<List<CampaignResponse>> getAllCampaigns() {
+        var campaignList = campaignService.getActiveCampaigns();
+        var responseList = campaignResponseGenerator.generateCampaignResponseList(campaignList);
+        return ResponseEntity.ok(responseList);
     }
 
     @Override
