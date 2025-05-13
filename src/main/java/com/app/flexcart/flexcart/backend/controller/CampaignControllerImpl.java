@@ -27,7 +27,7 @@ public class CampaignControllerImpl implements ICampaignController {
         campaignService.saveCampaign(request.getName(), request.getDescription(),
                 request.getActions(),
                 request.getConditions(), request.getStartDate(), request.getEndDate());
-        return ResponseEntity.ok("Campaign is created successfully");
+        return ResponseEntity.created(null).body("Campaign is created successfully");
     }
 
     @Override

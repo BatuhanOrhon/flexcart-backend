@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.app.flexcart.flexcart.backend.controller.abstracts.ICartController;
@@ -27,7 +26,6 @@ public class CartControllerImpl implements ICartController {
     private final CampaignService campaignService;
 
     @Override
-    @PostMapping("/cart/{userId}/item")
     public ResponseEntity<String> addCartItem(PostCartItemRequest cartRequest, Long userId) {
         cartService.addCartItem(userId, cartRequest.getProductId(), cartRequest.getQuantity());
         return ResponseEntity.ok("Cart item is added successfully");
@@ -45,6 +43,7 @@ public class CartControllerImpl implements ICartController {
         return ResponseEntity.ok(response);
     }
 
+    // TODO Might be removed from here
     private void populateCampaignNames(GetCartResponse response, List<Campaign> campaign) {
         response.setCampaigns(campaign.stream()
                 .map(c -> new CampaignResponse(c.getName(), c.getDescription()))
