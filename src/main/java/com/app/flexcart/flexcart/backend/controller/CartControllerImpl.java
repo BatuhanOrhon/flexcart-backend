@@ -15,6 +15,7 @@ import com.app.flexcart.flexcart.backend.domain.campaign.Campaign;
 import com.app.flexcart.flexcart.backend.service.CampaignService;
 import com.app.flexcart.flexcart.backend.service.CartService;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -55,6 +56,12 @@ public class CartControllerImpl implements ICartController {
         response.setTotalPrice(cart.getTotal());
         response.setShippingFee(cart.getShippingFee());
         return ResponseEntity.ok(response);
+    }
+
+    @Override
+    public ResponseEntity<?> removeFromCart(Long userId, Long itemId, @NotNull int quantity) {
+        cartService.removeFromCart(userId, itemId, quantity);
+        return ResponseEntity.ok("Item is removed from cart successfully");
     }
 
 }

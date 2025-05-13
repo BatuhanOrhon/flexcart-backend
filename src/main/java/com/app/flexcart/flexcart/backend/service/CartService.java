@@ -29,6 +29,20 @@ public class CartService {
 
     private final BigDecimal shippingFee = BigDecimal.valueOf(25);
 
+    public void removeFromCart(Long userId, Long productId, int quantity) {
+        var cart = getCartEntity(userId);
+        var cartItem = cart.getCartItems().stream()
+                .filter(item -> item.getProduct().getId().equals(productId))
+                .findFirst()
+                .orElseThrow(() -> new CartNotFoundException("Product not found in cart"));
+        if (cartItem.getQuantity() > quantity) {
+            cartItem.setQuantity(cartItem.getQuantity() - quantity);
+        } else {
+            cart.getCartItems().remove(cartItem);
+        }
+        cartRepository.save(cart);
+    }
+
     public void addCartItem(Long userId, Long productId, int quantity) {
         var user = userService.getUserEntityById(userId);
         var cart = user.getCart();
