@@ -34,13 +34,13 @@ public class PostCampaignRequest {
     @NotNull
     @FutureOrPresent
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm:ss")
-    @Schema(description = "Start date of the campaign", example = "01.06.2023 00:00:00", required = true)
+    @Schema(description = "Start date of the campaign. Must be in the future", example = "01.06.2023 00:00:00", required = true)
     private LocalDateTime startDate;
 
     @NotNull
     @Future
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd.MM.yyyy HH:mm:ss")
-    @Schema(description = "End date of the campaign", example = "30.06.2023 23:59:59", required = true)
+    @Schema(description = "End date of the campaign. . Must be in the future", example = "30.06.2023 23:59:59", required = true)
     private LocalDateTime endDate;
 
     @NotNull
