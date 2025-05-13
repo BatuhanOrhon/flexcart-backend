@@ -33,7 +33,7 @@ public class FreeUnitsOnCategoryActionTest {
         Cart mockCart = mock(Cart.class);
         when(mockCart.getCartItems()).thenReturn(List.of(mockCartItem));
 
-        BigDecimal result = action.apply(mockCart);
+        BigDecimal result = action.calculate(mockCart);
 
         assertEquals(new BigDecimal("150.00"), result);
     }
@@ -55,7 +55,7 @@ public class FreeUnitsOnCategoryActionTest {
         Cart mockCart = mock(Cart.class);
         when(mockCart.getCartItems()).thenReturn(List.of(mockCartItem));
 
-        BigDecimal result = action.apply(mockCart);
+        BigDecimal result = action.calculate(mockCart);
 
         assertEquals(new BigDecimal("100.00"), result);
     }
@@ -85,7 +85,7 @@ public class FreeUnitsOnCategoryActionTest {
         Cart mockCart = mock(Cart.class);
         when(mockCart.getCartItems()).thenReturn(List.of(mockCartItem1, mockCartItem2));
 
-        BigDecimal result = action.apply(mockCart);
+        BigDecimal result = action.calculate(mockCart);
 
         assertEquals(new BigDecimal("160.00"), result);
     }
@@ -115,7 +115,7 @@ public class FreeUnitsOnCategoryActionTest {
         Cart mockCart = mock(Cart.class);
         when(mockCart.getCartItems()).thenReturn(List.of(mockCartItem1, mockCartItem2));
 
-        BigDecimal result = action.apply(mockCart);
+        BigDecimal result = action.calculate(mockCart);
 
         assertEquals(new BigDecimal("110.00"), result);
     }

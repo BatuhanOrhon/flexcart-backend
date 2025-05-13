@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.app.flexcart.flexcart.backend.domain.transaction.Cart;
+
 import lombok.Getter;
 
 @Getter
@@ -19,7 +20,7 @@ public class FreeUnitsOnCategoryAction implements Action {
     }
 
     @Override
-    public BigDecimal apply(Cart cart) {
+    public BigDecimal calculate(Cart cart) {
         List<BigDecimal> unitPrices = cart.getCartItems().stream()
                 .filter(item -> item.getProduct().getCategoryId() == categoryId)
                 .flatMap(item -> Collections.nCopies(item.getQuantity(), item.getProduct().getPrice()).stream())
@@ -31,6 +32,11 @@ public class FreeUnitsOnCategoryAction implements Action {
         return unitPrices.stream()
                 .limit(freebies)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    @Override
+    public void apply(Cart cart) {
+        cart.setCurrentDiscount(cart.getCurrentDiscount().add(calculate(cart)));
     }
 
 }

@@ -36,7 +36,7 @@ public class PercentageOnProductActionTest {
         Cart mockCart = mock(Cart.class);
         when(mockCart.getCartItems()).thenReturn(List.of(mockCartItem1, mockCartItem2));
 
-        BigDecimal result = action.apply(mockCart);
+        BigDecimal result = action.calculate(mockCart);
 
         assertEquals(new BigDecimal("15.00"), result);
     }
@@ -57,7 +57,7 @@ public class PercentageOnProductActionTest {
         Cart mockCart = mock(Cart.class);
         when(mockCart.getCartItems()).thenReturn(List.of(mockCartItem));
 
-        BigDecimal result = action.apply(mockCart);
+        BigDecimal result = action.calculate(mockCart);
 
         assertEquals(BigDecimal.valueOf(0, 2), result);
     }
@@ -78,7 +78,7 @@ public class PercentageOnProductActionTest {
         Cart mockCart = mock(Cart.class);
         when(mockCart.getCartItems()).thenReturn(List.of(mockCartItem));
 
-        BigDecimal result = action.apply(mockCart);
+        BigDecimal result = action.calculate(mockCart);
 
         assertEquals(BigDecimal.valueOf(0, 2), result);
     }

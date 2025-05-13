@@ -42,6 +42,7 @@ public class OrderService {
     @Transactional
     public void placeOrder(Long userId) {
         var cart = cartService.getCart(userId);
+        var total = cart.getTotal();
         var campaigns = campaignService.applyBestCampaigns(cart);
         var order = new OrderEntity();
 
@@ -53,8 +54,8 @@ public class OrderService {
                     .toList());
         }
 
-        order.setTotal(cart.getTotal());
-        order.setDiscount(cart.getCurrentDiscount());
+        order.setTotal(total);
+        order.setDiscount(total.subtract(cart.getTotal()));
         order.setOrderDate(LocalDateTime.now());
 
         var user = new UserEntity();

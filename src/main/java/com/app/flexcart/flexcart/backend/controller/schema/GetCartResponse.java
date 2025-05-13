@@ -22,9 +22,11 @@ public class GetCartResponse {
     private BigDecimal totalPrice;
 
     @Schema(description = "Discount applied to the cart", example = "20.00", required = true)
-    private BigDecimal discount;
+    private BigDecimal totalDiscount;
 
     @Schema(description = "List of campaigns applied to the cart", required = true)
     private List<CampaignResponse> campaigns;
+    @Schema(description = "Shipping fee for the cart", example = "25.00", required = true)
+    private BigDecimal shippingFee;
 
 }

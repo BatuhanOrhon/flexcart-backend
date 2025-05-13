@@ -19,6 +19,6 @@ public class CategoryQuantityCondition implements Condition {
                 .filter(i -> i.getProduct().getCategoryId() == categoryId)
                 .mapToInt(CartItem::getQuantity)
                 .sum();
-        return sum > minQuantity;
+        return sum >= minQuantity;
     }
 }

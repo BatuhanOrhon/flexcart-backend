@@ -17,7 +17,12 @@ public class PercentageOnTotalAction implements Action {
         this.percent = pct;
     }
 
-    public BigDecimal apply(Cart cart) {
+    public BigDecimal calculate(Cart cart) {
         return cart.getTotal().multiply(percent).divide(BigDecimal.valueOf(10000, 2), 2, RoundingMode.HALF_EVEN);
+    }
+
+    @Override
+    public void apply(Cart cart) {
+        cart.setCurrentDiscount(cart.getCurrentDiscount().add(calculate(cart)));
     }
 }

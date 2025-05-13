@@ -45,15 +45,14 @@ public class CartService {
             return response;
         }
 
+        var total = cart.getTotal();
         var campaignList = campaignService.applyBestCampaigns(cart);
 
         response.setItems(cartItemResponseGenerator.generateCartItemResponseList(cart));
-
         response.setCampaigns(campaignResponseGenerator.generateCampaignResponseList(campaignList));
-        response.setDiscount(campaignList.stream()
-                .map((c) -> c.calculateDiscount(cart))
-                .reduce(BigDecimal.ZERO, BigDecimal::add));
-        response.setTotalPrice(cart.getTotal());
+        response.setTotalDiscount(total.subtract(cart.getTotal()));
+        response.setShippingFee(cart.getShippingFee());
+        response.setTotalPrice(total);
         return response;
     }
 

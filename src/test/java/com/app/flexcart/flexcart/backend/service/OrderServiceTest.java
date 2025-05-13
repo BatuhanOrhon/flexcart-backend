@@ -1,12 +1,27 @@
 package com.app.flexcart.flexcart.backend.service;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.app.flexcart.flexcart.backend.controller.schema.OrderResponse;
 import com.app.flexcart.flexcart.backend.controller.util.OrderResponseGenerator;
@@ -19,23 +34,20 @@ import com.app.flexcart.flexcart.backend.model.entity.OrderEntity;
 import com.app.flexcart.flexcart.backend.model.entity.OrderItemEntity;
 import com.app.flexcart.flexcart.backend.model.repository.OrderRepository;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
 @ExtendWith(MockitoExtension.class)
 class OrderServiceTest {
 
-    @Mock private OrderRepository orderRepository;
-    @Mock private CartService cartService;
-    @Mock private CampaignService campaignService;
-    @Mock private OrderResponseGenerator orderResponseGenerator;
+    @Mock
+    private OrderRepository orderRepository;
+    @Mock
+    private CartService cartService;
+    @Mock
+    private CampaignService campaignService;
+    @Mock
+    private OrderResponseGenerator orderResponseGenerator;
 
-    @InjectMocks private OrderService orderService;
+    @InjectMocks
+    private OrderService orderService;
 
     private final Long userId = 1L;
 
@@ -57,7 +69,8 @@ class OrderServiceTest {
     @Test
     void getOrdersResponse_shouldUseAllArgsConstructorAndDelegateToGenerator() {
         List<OrderEntity> orders = List.of(new OrderEntity());
-        OrderResponse response = new OrderResponse(10L, LocalDateTime.now(), new BigDecimal("100"), new BigDecimal("5"), List.of());
+        OrderResponse response = new OrderResponse(10L, LocalDateTime.now(), new BigDecimal("100"), new BigDecimal("5"),
+                List.of());
         List<OrderResponse> responses = List.of(response);
 
         when(orderRepository.findByUser_UserId(userId)).thenReturn(orders);
@@ -91,7 +104,7 @@ class OrderServiceTest {
 
         assertNull(saved.getAppliedCampaigns());
         assertEquals(new BigDecimal("205"), saved.getTotal());
-        assertEquals(new BigDecimal("5"), saved.getDiscount());
+        assertEquals(new BigDecimal("0"), saved.getDiscount());
         assertNotNull(saved.getOrderDate());
         assertTrue(ChronoUnit.SECONDS.between(saved.getOrderDate(), LocalDateTime.now()) < 1);
 
@@ -131,7 +144,7 @@ class OrderServiceTest {
         assertEquals(99L, ce.getCampaignId());
 
         assertEquals(new BigDecimal("43"), saved.getTotal());
-        assertEquals(new BigDecimal("7"), saved.getDiscount());
+        assertEquals(new BigDecimal("0"), saved.getDiscount());
         assertEquals(1, saved.getOrderItems().size());
         OrderItemEntity item = saved.getOrderItems().get(0);
         assertEquals(1, item.getQuantity());

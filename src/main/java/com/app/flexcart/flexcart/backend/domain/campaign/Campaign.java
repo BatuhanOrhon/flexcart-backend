@@ -26,14 +26,12 @@ public class Campaign {
     private CampaignType type;
 
     public void applyDiscount(Cart cart) {
-        cart.setCurrentDiscount(cart.getCurrentDiscount().add(actions.stream()
-                .map(a -> a.apply(cart))
-                .reduce(BigDecimal.ZERO, BigDecimal::add)));
+        actions.stream().forEach(a -> a.apply(cart));
     }
 
     public BigDecimal calculateDiscount(Cart cart) {
         return actions.stream()
-                .map(a -> a.apply(cart))
+                .map(a -> a.calculate(cart))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
